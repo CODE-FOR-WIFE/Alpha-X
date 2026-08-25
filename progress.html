@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALPHA X — Progress</title>
+<link rel="stylesheet" href="tokens.css"><!-- ฟอนต์ทั้งหมด self-host ผ่าน tokens.css -->
+<style>
+  /* ============================================================
+     วิธีอัปเดต (ทุก session — คร่าว ๆ พอ ไม่ลงรายละเอียดเครื่องมือ):
+     1. แก้ป้าย .status (ON PLAN / AT RISK / BEHIND) + วันที่ updated
+     2. ติ๊ก ship item ที่เสร็จ: เพิ่ม class "done" ให้ <li> ใน .ship
+     3. เลื่อนจุด "ตอนนี้" ในปฏิทิน: ย้าย class "now" ไป cell วันปัจจุบัน
+     4. เพิ่ม 1 บรรทัดใน Session log (บนสุด): วันที่ + สรุปสั้น + on plan?
+     ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 18px; } /* ขยาย typo ทั้งหน้า (tokens เป็น rem) */
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-body); line-height: var(--leading-body);
+    padding: var(--sp-16) var(--sp-8) var(--sp-24);
+  }
+  /* พื้นหลัง hero + overlay ดำไล่ลง — ภาพโผล่จาง ๆ ช่วงบน */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background:
+      linear-gradient(180deg,
+        oklch(16% 0.004 285 / 0.82) 0%,
+        oklch(16% 0.004 285 / 0.94) 45%,
+        var(--ax-black) 85%),
+      url("deck/assets/hero-car-a.jpg") center top / cover no-repeat;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-16); }
+  .label {
+    font-family: var(--font-caps); font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--ax-text-3);
+  }
+
+  /* ---- header ---- */
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--sp-8); flex-wrap: wrap; }
+  header img { height: 26px; margin-bottom: var(--sp-6); }
+  header h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-2xl); }
+  header h1 em { font-style: italic; color: var(--accent-soft); }
+
+  /* ---- meta table (กล่องข้อมูลโปรเจกต์) ---- */
+  .meta-table {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line);
+  }
+  @media (min-width: 760px) { .meta-table { grid-template-columns: repeat(4, 1fr); } }
+  .meta-table .cell {
+    background: oklch(21% 0.006 285 / 0.88); padding: var(--sp-4) var(--sp-6);
+    display: flex; flex-direction: column; gap: var(--sp-2);
+  }
+  .meta-table .cell strong { font-weight: var(--weight-medium); font-size: var(--text-base); }
+  .meta-table .hot { color: var(--accent); }
+  .meta-table .gold { color: var(--accent-soft); }
+
+  /* ---- archive (โครงรองรับอนาคต) ---- */
+  details.archive { border: 1px solid var(--line); }
+  details.archive summary {
+    cursor: pointer; list-style: none; padding: var(--sp-4) var(--sp-6);
+    font-family: var(--font-caps); font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--ax-text-3);
+  }
+  details.archive summary::before { content: "+ "; color: var(--accent); }
+  details.archive[open] summary::before { content: "− "; }
+  details.archive .inner { padding: var(--sp-4) var(--sp-6) var(--sp-6); border-top: 1px solid var(--line); }
+  .status {
+    font-family: var(--font-caps); letter-spacing: 0.15em; font-size: var(--text-sm);
+    border: 1px solid; padding: 10px 22px; border-radius: 999px; white-space: nowrap;
+  }
+  .status.onplan { color: oklch(75% 0.12 150); border-color: oklch(40% 0.08 150); }
+  .status.atrisk { color: var(--ax-gold); border-color: var(--ax-gold); }
+  .status.behind { color: var(--accent); border-color: var(--accent); }
+  .updated { text-align: right; }
+
+  /* ---- ปฏิทิน 2 สัปดาห์ ---- */
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal .cell {
+    background: oklch(21% 0.006 285 / 0.88); border: 1px solid var(--line);
+    min-height: 104px; padding: var(--sp-3) var(--sp-4);
+    font-size: var(--text-sm); display: flex; flex-direction: column; gap: 4px;
+  }
+  .cal .d { font-family: var(--font-caps); color: var(--ax-text-3); letter-spacing: 0.08em; }
+  .cal .cell.past { opacity: 0.45; }
+  .cal .cell.now { border-color: var(--accent); }
+  .cal .cell.now .d { color: var(--accent); }
+  .cal .cell.ship { border-color: var(--accent-soft); background: oklch(21% 0.02 84); }
+  .cal .m { color: var(--text-muted); }
+  .cal .m.key { color: var(--text); }
+
+  /* ---- 2 tracks ---- */
+  .tracks { display: grid; grid-template-columns: 1fr; gap: var(--sp-6); }
+  @media (min-width: 760px) { .tracks { grid-template-columns: 1fr 1fr; } }
+  .track { background: oklch(21% 0.006 285 / 0.88); border: 1px solid var(--line); padding: var(--sp-8); }
+  .track h2 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-2xl); margin: var(--sp-2) 0 var(--sp-4); }
+  .stagebar { display: flex; gap: 4px; margin-bottom: var(--sp-6); }
+  .stagebar i { flex: 1; height: 4px; background: var(--ax-ink-2); }
+  .stagebar i.on { background: var(--accent); }
+  .stagebar i.gold { background: var(--accent-soft); }
+  .stagelabel { font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--sp-6); }
+  .ship { list-style: none; }
+  .ship li { padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); font-size: var(--text-base); color: var(--text-muted); }
+  .ship li:last-child { border-bottom: 0; }
+  .ship li::before { content: "○"; margin-right: var(--sp-3); color: var(--ax-text-3); }
+  .ship li.done { color: var(--text); }
+  .ship li.done::before { content: "●"; color: var(--accent); }
+
+  /* ---- session log (คร่าว ๆ) ---- */
+  .log { list-style: none; }
+  .log li { display: flex; gap: var(--sp-6); padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); font-size: var(--text-base); }
+  .log time { font-family: var(--font-caps); letter-spacing: 0.08em; color: var(--ax-text-3); white-space: nowrap; }
+  .log .ok { margin-left: auto; white-space: nowrap; color: oklch(75% 0.12 150); font-family: var(--font-caps); font-size: var(--text-xs); letter-spacing: 0.1em; }
+
+  footer { color: var(--ax-text-3); font-size: var(--text-xs); font-family: var(--font-caps); letter-spacing: 0.1em; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <img src="deck/assets/alpha-x-logo.png" alt="ALPHA X">
+      <h1>Website Revamp — <em>Progress</em></h1>
+    </div>
+    <div class="updated">
+      <span class="label">Updated · 26 ส.ค. 2026</span><br><br>
+      <span class="status onplan">● ON PLAN</span>
+    </div>
+  </header>
+
+  <!-- ==== ตารางข้อมูลโปรเจกต์ (เพิ่ม cell ได้เรื่อย ๆ — grid จัดแถวเอง) ==== -->
+  <section class="meta-table">
+    <div class="cell"><span class="label">Phase</span><strong class="gold">1 · Pitch</strong></div>
+    <div class="cell"><span class="label">Deliverable</span><strong>Pitch Deck + Vercel Demo</strong></div>
+    <div class="cell"><span class="label">Deadline</span><strong class="hot">5 กันยายน 2026</strong></div>
+    <div class="cell"><span class="label">ทีม</span><strong>แทน (UX/UI) × Code for Wife</strong></div>
+    <div class="cell"><span class="label">สถานะงาน</span><strong>Demo-first · เริ่ม Home / Club</strong></div>
+    <div class="cell"><span class="label">Review ถัดไป</span><strong>อาทิตย์ 30 ส.ค. · CFW #1</strong></div>
+    <div class="cell"><span class="label">Deck</span><strong>skeleton 12/12 · visual 0/12</strong></div>
+    <div class="cell"><span class="label">Demo</span><strong>ฐานพร้อม · เริ่ม build พุธ 26</strong></div>
+  </section>
+
+  <!-- ==== ปฏิทิน 24 ส.ค. → 5 ก.ย. ==== -->
+  <section>
+    <span class="label">Timeline — 2 สัปดาห์ · ship 5 ก.ย.</span><br><br>
+    <div class="cal">
+      <div class="cell past"><span class="d">จ 24</span><span class="m key">Kickoff · ฐานครบ</span></div>
+      <div class="cell past"><span class="d">อ 25</span><span class="m">เตรียมโครงดีไซน์</span></div>
+      <div class="cell now"><span class="d">พ 26</span><span class="m key">Demo: scope + Home</span></div>
+      <div class="cell"><span class="d">พฤ 27</span><span class="m">Demo: Home กดได้</span></div>
+      <div class="cell"><span class="d">ศ 28</span><span class="m key">Demo: Club + Nav</span></div>
+      <div class="cell"><span class="d">ส 29</span><span class="m">Responsive + Vercel</span></div>
+      <div class="cell"><span class="d">อา 30</span><span class="m">Review CFW #1</span></div>
+
+      <div class="cell"><span class="d">จ 31</span><span class="m">แก้ Demo + lock</span></div>
+      <div class="cell"><span class="d">อ 1</span><span class="m key">Deck: visual 1–6</span></div>
+      <div class="cell"><span class="d">พ 2</span><span class="m">Deck: visual 7–12</span></div>
+      <div class="cell"><span class="d">พฤ 3</span><span class="m key">QA 2 ชั้น + export</span></div>
+      <div class="cell"><span class="d">ศ 4</span><span class="m">Buffer + ซ้อม pitch</span></div>
+      <div class="cell ship"><span class="d">ส 5</span><span class="m key">★ SHIP</span></div>
+      <div class="cell"><span class="d">—</span></div>
+    </div>
+  </section>
+
+  <!-- ==== 2 deliverables ==== -->
+  <section class="tracks">
+    <div class="track">
+      <span class="label">Track A</span>
+      <h2>Pitch Deck — 12 สไลด์</h2>
+      <div class="stagebar"><i class="on"></i><i class="on"></i><i></i><i></i><i class="gold"></i></div>
+      <p class="stagelabel">โครง ✓ · skeleton ✓ · รอภาพจาก demo · <strong>ถัดไป: visual 1–2 ก.ย.</strong> · export · ★ship</p>
+      <ul class="ship">
+        <li class="done">โครงเนื้อหา 12 สไลด์ + controller + export PNG</li>
+        <li class="done">Asset แบรนด์จริง (โลโก้ · แดง #E4002D · ฟอนต์ ALPHA X)</li>
+        <li>ลง visual ทุกสไลด์ (ผ่านเกณฑ์ anti-AI-slop)</li>
+        <li>รูปประกอบ art-directed ครบ</li>
+        <li>S7 key screens + S11 QR (รอ demo)</li>
+        <li>Export ครบ 12 → Google Slides</li>
+      </ul>
+    </div>
+    <div class="track">
+      <span class="label">Track B</span>
+      <h2>Vercel Demo — Home + Club</h2>
+      <div class="stagebar"><i class="on"></i><i></i><i></i><i></i><i class="gold"></i></div>
+      <p class="stagelabel">เตรียมฐาน ✓ · <strong>กำลังทำ: build Home / Club</strong> · Vercel · ★ship</p>
+      <ul class="ship">
+        <li class="done">Design system + ฟอนต์แบรนด์ พร้อมใช้</li>
+        <li>โครงดีไซน์หน้า Home / Club พร้อม build</li>
+        <li>หน้า Home กดได้จริง</li>
+        <li>หน้า Alpha X Club hub กดได้จริง</li>
+        <li>Nav ที่เหลือไม่ตัน (placeholder สวย)</li>
+        <li>ขึ้น Vercel + ผ่าน QA 2 ชั้น</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==== session log — สรุปสั้น ==== -->
+  <section>
+    <span class="label">Session Log</span><br><br>
+    <ul class="log">
+      <li><time>26 ส.ค.</time><span>ปรับแผนเป็น Demo-first: ปิด Home + Club + Vercel ก่อน แล้วใช้ของจริงทำ Deck 12 สไลด์</span><span class="ok">ON PLAN</span></li>
+      <li><time>24 ส.ค.</time><span>Kickoff: brief + research + asset แบรนด์ครบ · โครง deck 12 สไลด์ · ทิศทางดีไซน์ชัดแล้ว</span><span class="ok">ON PLAN</span></li>
+    </ul>
+  </section>
+
+  <!-- ==== Archive — โครงรองรับอนาคต ====
+       กติกากันหน้าบวม: หน้าหลักโชว์เฉพาะ "phase ปัจจุบัน" เสมอ
+       · จบสัปดาห์ → ย้ายปฏิทิน+log ของสัปดาห์นั้นมาไว้ใน archive ด้านล่าง
+       · จบ phase (เช่นชนะ bidding → เข้า Phase 2 Production 8 สัปดาห์)
+         → ห่อทั้ง phase เดิมเป็น <details class="archive"> อันเดียว
+         แล้วสร้างปฏิทิน/tracks ชุดใหม่ของ phase ใหม่แทนที่ด้านบน
+       · meta-table เพิ่ม cell ได้เรื่อย ๆ (grid จัดแถวให้เอง)  ==== -->
+  <details class="archive">
+    <summary>Archive — สัปดาห์/เฟสที่จบแล้ว</summary>
+    <div class="inner"><p class="label" style="text-transform:none; letter-spacing:0.02em">ยังไม่มี — สัปดาห์แรกกำลังดำเนินอยู่</p></div>
+  </details>
+
+  <footer>ALPHA X × CODE FOR WIFE · DEADLINE 5 SEP 2026 · WEALTH WITH PASSION</footer>
+</div>
+</body>
+</html>

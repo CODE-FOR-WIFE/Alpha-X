@@ -1,0 +1,161 @@
+/* ============================================================
+   ALPHA X — Design Tokens (single source of truth)
+   ใช้ร่วมกันทั้ง deck/ และ demo/ — ห้ามประกาศสี/ฟอนต์/ระยะนอกไฟล์นี้
+   ทิศ CI: proposal 8 July = dark cinematic + red X accent
+   ระบบสี: OKLCH (L C H) — ปรับ lightness/chroma ได้โดยฮิวไม่เพี้ยน
+   สีแดง #E4002D = ค่าจริงดูดจากโลโก้ (deck/assets/alpha-x-logo.png)
+   ⚠ ค่าทองยัง sample จากตา — รอ confirm CFW ใน review แรก
+   ============================================================ */
+
+/* ---- ฟอนต์แบรนด์จริง "ALPHA X" (TypeK Foundry / เอกลักษณ์ เพียรพนาเวช)
+   ดึงจากเว็บ alphaxclub.com — รองรับไทยครบ · ไฟล์อยู่ fonts/ ข้างไฟล์นี้ ---- */
+@font-face {
+  font-family: "ALPHA X";
+  src: url("fonts/ALPHAX-Light.ttf") format("truetype");
+  font-weight: 300; font-display: swap;
+}
+@font-face {
+  font-family: "ALPHA X";
+  src: url("fonts/ALPHAX-LightItalic.ttf") format("truetype");
+  font-weight: 300; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "ALPHA X";
+  src: url("fonts/ALPHAX-Regular.ttf") format("truetype");
+  font-weight: 400; font-display: swap;
+}
+@font-face {
+  font-family: "ALPHA X";
+  src: url("fonts/ALPHAX-Bold.ttf") format("truetype");
+  font-weight: 700; font-display: swap;
+}
+
+/* ---- ฟอนต์เสริม self-host ทั้งหมด (เลิกพึ่ง Google Fonts CDN —
+   กันฟอนต์ไทยหลุดเป็นฟอนต์ระบบ + จำเป็นต่อการ export PNG ให้ฝังฟอนต์ได้) ---- */
+@font-face { font-family: "Playfair Display"; src: url("fonts/PlayfairDisplay-400-normal.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Playfair Display"; src: url("fonts/PlayfairDisplay-400-italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Playfair Display"; src: url("fonts/PlayfairDisplay-500-normal.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Trirong"; src: url("fonts/Trirong-400-normal.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Trirong"; src: url("fonts/Trirong-500-normal.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Anuphan"; src: url("fonts/Anuphan-400-normal.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Anuphan"; src: url("fonts/Anuphan-500-normal.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+
+:root {
+  /* ---- Brand core ---- */
+  --ax-black:      oklch(16% 0.004 285);  /* ≈#0B0B0D พื้นหลักแบรนด์ (ไม่ใช่ดำดิบ) */
+  --ax-ink:        oklch(21% 0.006 285);  /* ≈#16161A surface ยกระดับบนดำ */
+  --ax-ink-2:      oklch(25% 0.008 285);  /* ≈#212127 surface ชั้นสอง / card hover */
+  --ax-navy:       oklch(26% 0.065 265);  /* ≈#1A2340 จาก stationery option 1 */
+  --ax-red:        oklch(57% 0.24 23);    /* #E4002D ✓ ดูดจากโลโก้จริง — accent เดียวที่ตะโกนได้ */
+  --ax-red-deep:   oklch(46% 0.20 23);    /* red กด hover / บนพื้นสว่าง (ไล่ L ลงจากแดงแบรนด์) */
+  --ax-gold:       oklch(72% 0.10 84);    /* ≈#C9A24B accent รอง — เฉพาะโซน Club/lifestyle */
+  --ax-cream:      oklch(95% 0.012 85);   /* ≈#F4EFE6 พื้นสว่างฝั่ง editorial */
+  --ax-white:      oklch(100% 0 0);
+
+  /* ---- Neutrals (บนพื้นดำ) — เจือ warm นิดเดียวให้เข้าโลก editorial ---- */
+  --ax-text:       oklch(97% 0.003 90);   /* ≈#F5F4F2 หลักบนดำ — contrast ~17:1 */
+  --ax-text-2:     oklch(76% 0.005 90);   /* ≈#B9B7B2 secondary — ~7.9:1 */
+  --ax-text-3:     oklch(62% 0.007 95);   /* caption — 4.8:1 บน bg, 4.7:1 บน surface (AA ผ่านทุกพื้น ห้ามจางกว่านี้) */
+  --ax-line:       oklch(30% 0.008 285);  /* ≈#2E2E34 เส้นแบ่งบนดำ */
+
+  /* ---- Semantic ---- */
+  --bg:            var(--ax-black);
+  --surface:       var(--ax-ink);
+  --surface-2:     var(--ax-ink-2);
+  --text:          var(--ax-text);
+  --text-muted:    var(--ax-text-2);
+  --accent:        var(--ax-red);
+  --accent-soft:   var(--ax-gold);
+  --line:          var(--ax-line);
+
+  /* ---- บทบาทสี: แยก "แบรนด์" ออกจาก "ความหมาย" (กันปุ่มแดง = ไม่กล้ากด) ----
+     กฎการใช้แดงแบรนด์ (--accent):
+     · ใช้เป็น "เครื่องหมาย" เท่านั้น — เส้น slash, ขีด eyebrow, จุด active, ตัว X, ตัวเลขเน้น
+     · ห้ามเป็นพื้นปุ่ม/พื้น interactive ขนาดใหญ่ (สมองอ่านเป็น error/destructive)
+     · ข้อยกเว้นเดียว: badge "LIVE" (convention วงการ broadcast)                       */
+
+  /* CTA — บนพื้นดำ ปุ่มหลักคือครีม (หรูแบบบัตรเชิญ, contrast 15:1) */
+  --cta-bg:          var(--ax-cream);
+  --cta-text:        oklch(20% 0.006 85);
+  --cta-hover-bg:    var(--ax-white);
+  --cta-ghost-line:  var(--ax-text);          /* ปุ่มรอง: outline ขาว */
+  --focus-ring:      var(--ax-gold);          /* focus ทุก interactive — ทองตัดกับทั้งดำ/ครีม */
+
+  /* Feedback states — คนละ hue กับแบรนด์ ชัดว่าเป็น "ระบบพูด" ไม่ใช่ "แบรนด์พูด"
+     ทุก state ต้องมี icon + ข้อความเสมอ ห้ามสื่อด้วยสีอย่างเดียว (WCAG 1.4.1) */
+  --sem-error:       oklch(56% 0.19 33);      /* แดงอมส้ม — อุ่นกว่าแดงแบรนด์ (h23) ชัดว่าคนละตัว */
+  --sem-error-bg:    oklch(24% 0.05 33);
+  --sem-success:     oklch(62% 0.10 155);     /* เขียวหม่น ไม่สด ไม่หลุดโลก luxury */
+  --sem-success-bg:  oklch(23% 0.04 155);
+  --sem-warn:        oklch(72% 0.12 75);      /* amber — จงใจให้ต่างจาก gold แบรนด์ (h84 C0.10) ด้วยความสด */
+  --sem-warn-bg:     oklch(24% 0.04 75);
+  --sem-info:        var(--ax-text-2);        /* info = เทา ไม่แย่งซีน */
+
+  /* Destructive action (เช่นใน CMS/ยืนยันลบ) — ใช้ sem-error ไม่ใช่แดงแบรนด์
+     และเป็น outline จนกว่าจะ hover เพื่อให้ "กดยาก" โดยธรรมชาติ */
+
+  /* ---- Typography — 3 เสียง (กฎความหรู: น้ำหนักเบา + ช่องไฟ ไม่ใช่ตัวหนา) ----
+     1. Display serif: Playfair Display (EN) / Trirong (TH) — hero, หัวเรื่องใหญ่, ตัวเลข
+        weight 400–500 เท่านั้น ห้าม 700+ (serif หนา = โรงแรมเชนราคากลาง)
+     2. Brand sans "ALPHA X" (ฟอนต์จริงของแบรนด์, ไทยครบ): weight 300 + tracking
+        สำหรับ wordmark/eyebrow/ปุ่ม · weight 400 ใช้เป็น body ได้
+     3. Fallback body: Inter (EN) / Anuphan (TH) */
+  --font-display:  "Playfair Display", "Trirong", Georgia, serif;
+  --font-caps:     "ALPHA X", "Montserrat", "Anuphan", "Helvetica Neue", sans-serif;
+  --font-body:     "ALPHA X", "Inter", "Anuphan", -apple-system, "Helvetica Neue", sans-serif;
+
+  --weight-display: 400;   /* serif แสดงผล — เบาไว้ก่อน */
+  --weight-caps:    300;   /* wordmark/eyebrow */
+  --weight-body:    400;
+  --weight-medium:  500;   /* เน้นในเนื้อความ — หนาสุดที่อนุญาต */
+
+  /* Type scale — 1.25 (major third), base 16 */
+  --text-xs:   0.75rem;   /* 12 — caption */
+  --text-sm:   0.875rem;  /* 14 — label */
+  --text-base: 1rem;      /* 16 — body */
+  --text-lg:   1.25rem;   /* 20 — lead */
+  --text-xl:   1.5625rem; /* 25 — h3 */
+  --text-2xl:  1.9375rem; /* 31 — h2 */
+  --text-3xl:  2.4375rem; /* 39 — h1 */
+  --text-4xl:  3.0625rem; /* 49 — display */
+  --text-5xl:  3.8125rem; /* 61 — hero */
+
+  --leading-tight: 1.15;  /* display/heads */
+  --leading-body:  1.65;  /* ไทยต้องการ line-height สูงกว่า EN */
+  --tracking-caps: 0.18em;/* wordmark / eyebrow label ตัวพิมพ์ใหญ่ */
+
+  /* ---- Spacing — 4px scale ---- */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-6: 1.5rem;   --sp-8: 2rem;     --sp-12: 3rem;    --sp-16: 4rem;
+  --sp-24: 6rem;    --sp-32: 8rem;    /* section rhythm ของหน้าเว็บ */
+
+  /* ---- Shape & elevation ---- */
+  --radius-sm: 2px;    /* แบรนด์เหลี่ยมคม — โค้งน้อยที่สุด */
+  --radius-md: 6px;
+  --shadow-card: 0 8px 32px oklch(0% 0 0 / 0.45);
+
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:   160ms;   /* hover/press */
+  --dur-reveal: 600ms;   /* scroll-triggered reveal */
+
+  /* ---- Layout ---- */
+  --container:  1200px;
+  --touch-min:  44px;
+  /* breakpoints (ใช้ใน media query): 393 / 768 / 1440 */
+}
+
+/* โซนพื้นสว่าง (editorial/Club) — override semantic ชุดเดียวจบ */
+.theme-light {
+  --bg:         var(--ax-cream);
+  --surface:    var(--ax-white);
+  --surface-2:  oklch(91% 0.015 85);   /* ≈#EAE4D8 */
+  --text:       oklch(23% 0.006 85);   /* ≈#1C1B18 */
+  --text-muted: oklch(45% 0.012 95);   /* ≈#5C594F */
+  --accent:     var(--ax-red-deep);    /* แดงเข้มขึ้นเพื่อคง contrast บนครีม */
+  --line:       oklch(85% 0.017 90);   /* ≈#D9D2C4 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-reveal: 0ms; }
+}
