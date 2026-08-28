@@ -23,6 +23,12 @@
     display: none;
   }
   .slide.active { display: block; }
+  body.native-export .stage { display: block; width: 1920px; height: 1080px; }
+  body.native-export .slide.active { inset: 0; transform: none !important; }
+  body.native-export .ctrl { display: none !important; }
+  body.native-export *, body.native-export *::before, body.native-export *::after {
+    animation: none !important; caret-color: transparent !important; transition: none !important;
+  }
   .pad { position: absolute; inset: 0; padding: 88px 112px; display: flex; flex-direction: column; }
 
   /* ===== Graphic devices — ภาษาภาพจาก brand template =====
@@ -596,11 +602,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/modern-screenshot@4/dist/index.js"></script>
 <script>
+  const nativeExport = new URLSearchParams(location.search).has("nativeExport");
+  if (nativeExport) document.body.classList.add("native-export", "exporting");
   const slides = [...document.querySelectorAll(".slide")];
   const counter = document.getElementById("counter");
   let cur = Math.min(Math.max(parseInt(location.hash.slice(1)) || 1, 1), slides.length) - 1;
 
   const fit = () => {
+    if (nativeExport) {
+      slides.forEach(el => el.style.transform = "none");
+      return;
+    }
     const s = Math.min(innerWidth / 1920, innerHeight / 1080);
     slides.forEach(el => el.style.transform = `scale(${s})`);
   };
@@ -620,20 +632,34 @@
   addEventListener("hashchange", () => show((parseInt(location.hash.slice(1)) || 1) - 1));
   fit(); show(cur);
 
-  /* Export PNG @2x — modern-screenshot (SVG foreignObject: รองรับ oklch + ฟอนต์ custom) */
+  const waitForAssets = async () => {
+    const requiredFonts = ["ALPHA X", "Playfair Display", "Trirong", "Anuphan"];
+    await Promise.all(requiredFonts.map(font => document.fonts.load(`16px "${font}"`, "ALPHA X ทดสอบ")));
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(async img => {
+      if (!img.complete) await new Promise(resolve => img.addEventListener("load", resolve, { once: true }));
+      if (img.decode) await img.decode().catch(() => undefined);
+    }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const missing = requiredFonts.filter(font => !document.fonts.check(`16px "${font}"`));
+    if (missing.length) throw new Error(`ฟอนต์โหลดไม่ครบ: ${missing.join(", ")}`);
+  };
+
+  /* Quick export ใน browser; งานส่งจริงให้ใช้ `pnpm deck:export` สำหรับ native Chromium capture */
   document.getElementById("export").onclick = async () => {
     const el = slides[cur];
     document.body.classList.add("exporting");
     const prevTransform = el.style.transform;
     el.style.transform = "none";               // แคปที่ขนาดจริง 1920×1080
     try {
+      await waitForAssets();
       const dataUrl = await modernScreenshot.domToPng(el, { scale: 2, width: 1920, height: 1080 });
       const a = document.createElement("a");
       a.download = `alphax-slide-${String(cur + 1).padStart(2, "0")}.png`;
       a.href = dataUrl;
       a.click();
     } catch (err) {
-      alert("Export ล้มเหลว: " + err.message + "\nใช้ fallback: ./export-all.sh");
+      alert("Export ล้มเหลว: " + err.message + "\nใช้คำสั่งคุณภาพสูงสุด: cd demo && pnpm deck:export");
     } finally {
       el.style.transform = prevTransform;
       document.body.classList.remove("exporting");

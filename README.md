@@ -30,7 +30,9 @@
 - โครง Pitch Deck ครบ 12/12 สไลด์
 - Brand assets, ฟอนต์ ALPHA X และ design tokens พร้อมใช้
 - Pitch Deck controller และระบบ export PNG พร้อม
-- งานถัดไปคือสร้าง Demo หน้า Home และ Alpha X Club ให้กดได้จริง
+- Demo หน้า Home และ Alpha X Club รัน local และกดได้แล้ว
+- ระบบ native Chromium export ตรวจครบ 12 สไลด์ที่ 3840×2160 แล้ว
+- งานถัดไปคือ visual QA, ปรับ Demo และขึ้น Vercel
 - Review กับ Code for Wife ครั้งที่ 1: **30 สิงหาคม 2026**
 
 ดู dashboard ฉบับเต็มได้ที่ [`progress.html`](./progress.html)
@@ -84,7 +86,17 @@ Demo ทำหน้าที่เป็นหลักฐานว่าแน
 - **Accessibility** — contrast ระดับ WCAG AA, touch target อย่างน้อย 44px และรองรับ reduced motion
 - **Deployment** — URL บน Vercel สำหรับ review และสร้าง QR ใน Deck
 
-โฟลเดอร์เป้าหมายคือ `demo/` ซึ่งจะถูกสร้างในขั้น build ถัดไป
+โค้ดอยู่ใน `demo/` และใช้ Next.js, Tailwind, Payload CMS กับ PostgreSQL ตาม architecture ที่เสนอ
+
+เริ่ม Demo:
+
+```bash
+cd demo
+pnpm install
+pnpm dev
+```
+
+เปิด Home ที่ <http://localhost:3000>, Club ที่ <http://localhost:3000/club> และ Payload Admin ที่ <http://localhost:3000/admin> โดยหน้า Admin ต้องมี PostgreSQL พร้อมใช้งาน
 
 ### 2. Pitch Deck
 
@@ -148,6 +160,15 @@ python3 check-contrast.py
 
 Deck ใช้ `modern-screenshot` จาก CDN ในขั้น export ดังนั้นฟังก์ชัน export ต้องเชื่อมต่ออินเทอร์เน็ต ส่วนการเปิดดูสไลด์ทั่วไปทำงานจากไฟล์ใน repo ได้
 
+สำหรับไฟล์ส่งมอบให้ใช้ native Chromium export ซึ่งรอ font/image readiness และตรวจขนาดภาพทุกหน้า:
+
+```bash
+cd demo
+pnpm deck:export
+```
+
+ผลลัพธ์อยู่ใน `deck/exports/` และถูก Git ignore โดยตั้งใจ
+
 Google Slides: [ALPHA X Pitch Deck](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit)
 
 ## Design System
@@ -178,22 +199,23 @@ Google Slides: [ALPHA X Pitch Deck](https://docs.google.com/presentation/d/1EDWQ
 | [`tokens.css`](./tokens.css) | CSS | Design tokens กลาง: สี ฟอนต์ spacing typography shape motion และ layout |
 | [`serve.ts`](./serve.ts) | Bun/TypeScript | Static development server ที่เสิร์ฟทั้ง repo บนพอร์ต 4321 พร้อม live reload |
 | [`check-contrast.py`](./check-contrast.py) | Python | ตรวจอัตราส่วน contrast ของ token สีตามเกณฑ์ WCAG |
-| [`research-templates.md`](./research-templates.md) | Internal research | งานวิจัย reference/template และแนวทางเลือก layout DNA สำหรับเว็บไซต์ |
 | [`.gitignore`](./.gitignore) | Git config | กันไฟล์ระบบ, build output, dependency และ local deployment metadata |
 
-### เอกสารต้นทาง
+### `brief/` — เอกสารต้นทางจากลูกค้า + research ภายใน
 
 | ไฟล์ | เนื้อหาและการใช้งาน |
 |---|---|
-| [`Alpha X Proposal (1).pdf`](./Alpha%20X%20Proposal%20%281%29.pdf) | Proposal/brand reference หลัก: persona, moodboard, stationery และ presentation tone |
-| [`AlphaX Sitemap 2026 revised.pdf`](./AlphaX%20Sitemap%202026%20revised.pdf) | Requirement, sitemap, specification รายหน้า และ timeline ที่ลูกค้าปรับปรุงแล้ว |
-| [`Techstack.pdf`](./Techstack.pdf) | Architecture, technology stack, security scope และข้อมูลประกอบงบประมาณ |
+| [`brief/proposal.pdf`](./brief/proposal.pdf) | Proposal/brand reference หลัก: persona, moodboard, stationery และ presentation tone |
+| [`brief/sitemap-2026.pdf`](./brief/sitemap-2026.pdf) | Requirement, sitemap, specification รายหน้า และ timeline ที่ลูกค้าปรับปรุงแล้ว |
+| [`brief/techstack.pdf`](./brief/techstack.pdf) | Architecture, technology stack, security scope และข้อมูลประกอบงบประมาณ |
+| [`brief/research-templates.md`](./brief/research-templates.md) | งานวิจัย reference/template และแนวทางเลือก layout DNA สำหรับเว็บไซต์ (internal) |
 
 ### `deck/`
 
 | ไฟล์ | หน้าที่ |
 |---|---|
 | [`deck/deck.html`](./deck/deck.html) | Pitch Deck ทั้ง 12 สไลด์ พร้อม controller, deep link และ PNG export |
+| [`deck/export-deck.mjs`](./deck/export-deck.mjs) | Playwright script export ทุกสไลด์เป็น PNG ลง `deck/exports/` |
 | [`deck/assets/alpha-x-logo.png`](./deck/assets/alpha-x-logo.png) | โลโก้ ALPHA X ที่ใช้ใน Deck และ Progress |
 | [`deck/assets/current-site.png`](./deck/assets/current-site.png) | Screenshot เว็บไซต์เดิมสำหรับสไลด์ Before → After |
 | [`deck/assets/hero-car-a.jpg`](./deck/assets/hero-car-a.jpg) | Hero photography ตัวเลือก A; ใช้เป็นภาพพื้นหลังของ Progress ด้วย |
@@ -217,13 +239,23 @@ Google Slides: [ALPHA X Pitch Deck](https://docs.google.com/presentation/d/1EDWQ
 
 ฟอนต์ทั้งหมด self-host ผ่าน `tokens.css` เพื่อให้การแสดงผลและการ export PNG สม่ำเสมอ
 
-### โครงสร้างที่กำลังจะเพิ่ม
+### `demo/`
+
+Next.js 16 static export (`output: 'export'`) — ไม่มี server, ไม่มี CMS, เนื้อหา hardcode ทั้งหมด เพื่อไม่ให้มีอะไรพังตอน pitch
 
 ```text
-demo/                  # Next.js + Tailwind Vercel Demo
-├── Home               # cinematic landing page
-├── Alpha X Club       # editorial content hub
-└── placeholders       # หน้าที่เหลือเพื่อให้ navigation ไม่ตัน
+demo/
+├── src/app/(frontend) # Home และ Alpha X Club
+├── src/components     # site-menu, reveal และ ui/ (shadcn)
+├── src/lib            # utils
+├── public/assets      # Brand imagery
+├── public/fonts       # ฟอนต์ที่ใช้ตอน runtime
+└── next.config.mjs    # output: 'export' + trailingSlash
+```
+
+```bash
+cd demo && pnpm install && pnpm dev     # http://localhost:3000
+cd demo && pnpm build && pnpm preview   # static export → http://localhost:8080
 ```
 
 ## Workflow และการอัปเดต Progress

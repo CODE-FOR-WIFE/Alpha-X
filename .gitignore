@@ -5,3 +5,5 @@ out/
 dist/
 .vercel/
 *.log
+preview/
+deck/exports/

@@ -88,7 +88,7 @@ Asset: QR gen ตอนได้ URL จริง
 - **Copy แบบ strategist:** ประโยคสั้น มั่นใจ ไม่มี cliché ("ยกระดับ/ปลดล็อก/ไร้รอยต่อ") ไม่มี exclamation
 - **ใส่ร่องรอย craft:** motif เส้น slash แดงจากโลโก้เป็น graphic device, ลาย lattice จาก stationery, ระบบเลขหน้า 00–04, รายละเอียดที่ template ไม่มี
 - QA สุดท้ายก่อนส่ง: ไล่ดูทีละสไลด์แล้วถามว่า "ถ้าเห็นใน Behance จะเชื่อไหมว่า studio ทำ" — ไม่ผ่าน = แก้
-- **ห้ามเปิดครัว:** ทุกสิ่งที่คนอื่นเห็น (progress.html, deck, demo) ห้ามเอ่ยชื่อเครื่องมือ AI / แหล่ง template — พูดแค่ผลงานและสถานะ · รายละเอียดเครื่องมืออยู่เฉพาะไฟล์ internal (PROJECT.md, research-templates.md)
+- **ห้ามเปิดครัว:** ทุกสิ่งที่คนอื่นเห็น (progress.html, deck, demo) ห้ามเอ่ยชื่อเครื่องมือ AI / แหล่ง template — พูดแค่ผลงานและสถานะ · รายละเอียดเครื่องมืออยู่เฉพาะไฟล์ internal (PROJECT.md, brief/research-templates.md)
 - **ห้าม wall of text:** ทุกสไลด์/ทุก section ต้องมีจังหวะเน้น — highlight คำสำคัญ (สี/serif italic/ตัวเลขใหญ่), ใช้ wordmark ALPHA X ประกอบหัวข้อ, ย่อหน้าไม่เกิน 2–3 บรรทัด, ตัวเลข/keyword ดึงออกมาเป็น display ไม่ฝังในพารากราฟ
 
 ### ภาษาภาพของเล่ม (จาก brand presentation template — ดูหน้า 14–15 ใน proposal)
@@ -123,9 +123,9 @@ Asset: QR gen ตอนได้ URL จริง
 
 ## วัตถุดิบ
 
-- `Alpha X Proposal (1).pdf` — brand persona, moodboard, stationery 3 options, presentation template (ตัวอย่าง tone deck)
-- `AlphaX Sitemap 2026 revised.pdf` — requirement + sitemap + spec รายหน้า + timeline
-- `Techstack.pdf` — architecture + งบ
+- `brief/proposal.pdf` — brand persona, moodboard, stationery 3 options, presentation template (ตัวอย่าง tone deck)
+- `brief/sitemap-2026.pdf` — requirement + sitemap + spec รายหน้า + timeline
+- `brief/techstack.pdf` — architecture + งบ
 - เว็บเดิม www.alphaxclub.com — แคป screenshot ทำ before/after
 - รูปประกอบ (hero/moodboard/mockup) — **gen ด้วย Magnific** เก็บลง `deck/assets/`
 - **ฟอนต์แบรนด์จริง "ALPHA X"** (TypeK Foundry, ไทยครบ) — ดึงจากเว็บเขาแล้ว → `fonts/` · โลโก้จริง → `deck/assets/alpha-x-logo.png` · แดงแบรนด์จริง **#E4002D** (ดูดจากโลโก้)
