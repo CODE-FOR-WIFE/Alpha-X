@@ -4,21 +4,20 @@ import Link from 'next/link'
 
 import { SiteMenu } from '@/components/site-menu'
 
-const heroA = '/assets/hero-car-a.jpg'
-const heroB = '/assets/hero-car-b.jpg'
 const logo = '/assets/alpha-x-logo.png'
 
+// รูปจับคู่กับหัวข้อบทความทีละอัน ไม่ใช่รูปรถ 2 ใบวนซ้ำ
 const stories = [
-  ['The Collector', 'Objects with a story worth preserving', heroB],
-  ['The Explorer', 'The roads that reward taking your time', heroA],
-  ['The Connoisseur', 'A quieter definition of rarity', heroB],
-  ['The Collector', 'Design, provenance and enduring value', heroA],
+  ['The Collector', 'Objects with a story worth preserving', '/assets/hero-story-collector.jpg'],
+  ['The Explorer', 'The roads that reward taking your time', '/assets/hero-story-explorer.jpg'],
+  ['The Connoisseur', 'A quieter definition of rarity', '/assets/hero-story-connoisseur.jpg'],
+  ['The Collector', 'Design, provenance and enduring value', '/assets/hero-story-provenance.jpg'],
 ] as const
 
 export default function ClubPage() {
   return (
     <main className="club-page section-light">
-      <header className="site-nav site-nav--light">
+      <header className="site-nav">
         <div className="shell site-nav__grid">
           <SiteMenu />
           <Link aria-label="ALPHA X home" className="brand" href="/"><Image alt="ALPHA X" height={27} priority src={logo} width={124} /></Link>
