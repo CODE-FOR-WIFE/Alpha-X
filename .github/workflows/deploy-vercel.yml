@@ -1,6 +1,8 @@
 # Deploy demo/ to a Vercel Hobby project via CLI.
-# Required repo secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
-# Do not import this GitHub org repo in the Vercel dashboard — Hobby blocks that.
+# Required environment secrets (GitHub Environment: development):
+#   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Token scope must be the team (or full account), not a single project —
+# project-scoped tokens make `vercel pull` fail with "Could not retrieve Project Settings".
 
 name: Deploy Vercel
 
@@ -35,41 +37,70 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Normalize Vercel secrets
+        run: |
+          {
+            echo "VERCEL_ORG_ID=$(printf '%s' "$VERCEL_ORG_ID" | tr -d '[:space:]')"
+            echo "VERCEL_PROJECT_ID=$(printf '%s' "$VERCEL_PROJECT_ID" | tr -d '[:space:]')"
+            echo "VERCEL_TOKEN=$(printf '%s' "$VERCEL_TOKEN" | tr -d '[:space:]')"
+          } >> "$GITHUB_ENV"
+
       - name: Check Vercel secrets
         run: |
           missing=0
           [ -n "$VERCEL_TOKEN" ] || { echo "::error::VERCEL_TOKEN is empty"; missing=1; }
           [ -n "$VERCEL_ORG_ID" ] || { echo "::error::VERCEL_ORG_ID is empty"; missing=1; }
           [ -n "$VERCEL_PROJECT_ID" ] || { echo "::error::VERCEL_PROJECT_ID is empty"; missing=1; }
+          echo "ORG prefix=${VERCEL_ORG_ID:0:5} length=${#VERCEL_ORG_ID}"
+          echo "PROJECT prefix=${VERCEL_PROJECT_ID:0:4} length=${#VERCEL_PROJECT_ID}"
+          case "$VERCEL_ORG_ID" in
+            team_*) ;;
+            *) echo "::warning::VERCEL_ORG_ID should start with team_" ;;
+          esac
+          case "$VERCEL_PROJECT_ID" in
+            prj_*) ;;
+            *) echo "::error::VERCEL_PROJECT_ID must start with prj_ (not the project name)"; missing=1 ;;
+          esac
           if [ "$missing" -ne 0 ]; then
-            echo "Add all three as secrets on the GitHub Environment named development."
+            echo "Fix secrets on GitHub Environment: development"
             exit 1
           fi
-          echo "All three Vercel secrets are present."
+
+      - name: Verify Vercel project access
+        run: |
+          code=$(curl -sS -o /tmp/vercel-project.json -w "%{http_code}" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}?teamId=${VERCEL_ORG_ID}")
+          echo "GET /v9/projects status=$code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Vercel API rejected the token or project ids (HTTP $code)."
+            echo "Recreate VERCEL_TOKEN at https://vercel.com/account/settings/tokens"
+            echo "Scope = the Hobby team (not a single project)."
+            python3 -c "import json; d=json.load(open('/tmp/vercel-project.json')); print(d.get('error', d))"
+            exit 1
+          fi
+          python3 -c "import json; d=json.load(open('/tmp/vercel-project.json')); print('Linked project:', d.get('name'), d.get('id'))"
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Pull Vercel Environment Information
+      - name: Link project
         working-directory: demo
-        run: vercel pull --yes --environment=${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}\n' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
 
-      - name: Build Project Artifacts
-        working-directory: demo
-        run: vercel build ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
+      - name: Deploy to Vercel
         id: deploy
         working-directory: demo
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           IS_PRODUCTION: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
         run: |
+          ARGS=(--yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID")
           if [ "$IS_PRODUCTION" = "true" ]; then
-            URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
-          else
-            URL=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+            ARGS+=(--prod)
           fi
+          URL=$(vercel deploy "${ARGS[@]}")
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "### Deployed to [$URL]($URL)" >> "$GITHUB_STEP_SUMMARY"
 
