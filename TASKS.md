@@ -11,21 +11,21 @@
 
 | # | สไลด์ | สถานะ | หมายเหตุ / สิ่งที่ต้องแก้ |
 |---|---|---|---|
-| S01 | Cover | ✅ ผ่าน | |
-| S02 | Who We Are — CFW | 🔍 กำลังดู | |
-| S03 | Why Revamp | ⬜ | |
-| S04 | Audience — 3 personas | ⬜ | |
-| S05 | Brand Persona | ⬜ | |
-| S06 | Design System | ⬜ | ยังมีช่อง component states ว่างอยู่ |
-| S07 | Architecture — 5 หน้า | ⬜ | |
-| S08 | Key Screens | ⬜ | |
-| S09 | Content Strategy | ⬜ | |
-| S10 | Tech & Security | ⬜ | |
-| S11 | Timeline & Investment | ⬜ | |
-| S12 | Live Demo | ⬜ | |
+| S01 | Cover | ✅ ผ่าน | ใส่รูปรถ + shade ไล่ซ้าย |
+| S02 | Who We Are — CFW | ✅ ผ่าน | redesign: โลโก้นำ · คำถามคู่ 64px · การ์ด 3 ใบ · backdrop จาง |
+| S03 | Why Revamp | ✅ ผ่าน | why-now bar เป็น stat+caption · แดงเล็กแก้ contrast ทั้งเดค 12 จุด |
+| S04 | Audience — 3 personas | ✅ ผ่าน | headline สั้น · เลข+ไอคอนคนละบรรทัด · body 2 บรรทัด |
+| S05 | Brand Persona | ✅ ผ่าน | ค่านิยมเป็น caps + เส้นคั่น · แก้รูป handshake ที่ผ้าเช็ดหน้าผิดตำแหน่ง |
+| S06 | Design System | ✅ ผ่าน | redesign: แถบสีเต็มความกว้าง · specimen ใหญ่ · ตัด spacing scale · แก้ contrast swatch แดง |
+| S07 | Architecture — 5 หน้า | ✅ ผ่าน | redesign เป็นสารบัญแนวตั้ง 5 แถว เลขแดงนำ |
+| S08 | Key Screens | ✅ ผ่าน | รูปเป็นพระเอก + caption ใต้รูป · footer บรรทัดเดียว |
+| S09 | Content Strategy | ✅ ผ่าน | headline สั้น + ย่อหน้า 2 บรรทัด |
+| S10 | Tech & Security | ✅ ผ่าน | redesign stat-led: 0 / 3 / <2s + stack เป็นโซ่ + chips |
+| S11 | Timeline & Investment | ✅ ผ่าน | redesign 2 บล็อกมีกรอบ · ราคาเป็นตัวเลขนำ |
+| S12 | Live Demo | ⬜ | ยังไม่ได้รีวิว |
 
 ## ⏳ ค้างไว้ตั้งใจ
-- **Slides ยังไม่ sync** — ของใน Figma ใหม่กว่าที่อยู่ใน Google Slides แล้ว (asset ครบ S03/S04/S05/S08/S09)
+- **Slides ยังไม่ sync** (รอบนี้มีของใหม่เยอะมาก — S02/S06/S07/S08/S10/S11 redesign ใหม่หมด) — ของใน Figma ใหม่กว่าที่อยู่ใน Google Slides แล้ว (asset ครบ S03/S04/S05/S08/S09)
   ตั้งใจสะสมงานก่อนแล้วค่อย sync ทีเดียว เพราะรันครั้งหนึ่งใช้เวลาราวหนึ่งนาที
   **ต้องกด `syncDeck()` ก่อนส่งลิงก์ให้ลูกค้าทุกครั้ง**
 

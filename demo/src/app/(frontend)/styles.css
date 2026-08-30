@@ -99,7 +99,7 @@ p { font-size: 17px; line-height: 1.7; }
 .button--outline:hover { background: white; color: var(--black); }
 .button--ghost { border-color: transparent; background: transparent; color: inherit; }
 .button--icon { width: 48px; padding: 0; }
-.menu-panel { position: fixed; z-index: 40; inset: 0 auto 0 0; width: min(600px, 100%); background: #111114; color: white; transform: translateX(-102%); transition: transform .55s cubic-bezier(.22, 1, .36, 1); visibility: hidden; }
+.menu-panel { position: fixed; z-index: 40; inset: 0 auto 0 0; width: min(600px, 100%); height: 100dvh; overflow-y: auto; overscroll-behavior: contain; background: #111114; color: white; transform: translateX(-102%); transition: transform .55s cubic-bezier(.22, 1, .36, 1); visibility: hidden; }
 .menu-panel--open { transform: none; visibility: visible; }
 .menu-panel__inner { position: relative; display: flex; min-height: 100%; flex-direction: column; padding: 132px clamp(28px, 6vw, 78px) 48px; }
 .menu-panel .hairline { margin: 20px 0 26px; }
@@ -351,6 +351,13 @@ p { font-size: 17px; line-height: 1.7; }
   .site-nav { height: 76px; }
   .club-page { padding-top: 76px; }
   .menu-close { top: 15px; }
+  /* จอมือถือ: หัวเมนูตัวใหญ่เท่าเดสก์ท็อปทำให้ "Contact & Inquiry" ตัดสองบรรทัด
+     แล้วดันบล็อกติดต่อตกขอบล่าง — ย่อลงพร้อมลดระยะบนให้พอดีหนึ่งจอ */
+  .menu-panel__inner { padding: 96px 24px 36px; }
+  .menu-panel__links a { gap: 16px; padding: 13px 0; font-size: clamp(26px, 4.6vh, 34px); }
+  .menu-panel__links span { font-size: 10px; }
+  .menu-panel .hairline { margin: 14px 0 18px; }
+  .menu-panel__contact { padding-top: 26px; }
   .brand img { width: 104px; }
   .hero { min-height: 820px; align-items: end; }
   .hero__copy { padding: 170px 0 126px; }

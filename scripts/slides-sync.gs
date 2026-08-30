@@ -15,17 +15,7 @@
  *     แล้วเก็บใส่ Script Properties (อย่าวางในโค้ด):
  *     Project Settings → Script Properties → Add → key `FIGMA_TOKEN`, value = token
  *  3. Run → syncDeck() (กด Authorize ครั้งแรก)
- *  4. หลังจากนั้นสั่ง sync ได้จากเมนูในตัว Slides เลย: Alpha X → Sync deck from Figma
- *
- * ต้องเข้าทาง Extensions → Apps Script ของไฟล์ Slides เท่านั้น ถ้าสร้างเป็น standalone project
- * (script.google.com โดยตรง) เมนู Alpha X จะไม่โผล่ เพราะ onOpen ผูกกับไฟล์ที่เปิดอยู่
- *
- * รันครั้งหนึ่งใช้เวลาราวหนึ่งถึงสองนาที — Apps Script ตัดที่ 6 นาที ดู Execution log
- * ระหว่างรันได้ว่าไปถึงสไลด์ไหนแล้ว
- *
- * ไม่มี trigger อัตโนมัติโดยตั้งใจ — sync ลบทุก element ในสไลด์ก่อนวางรูปใหม่
- * ถ้ามันเด้งขึ้นมากลางการพรีเซนต์ ผู้ชมจะเห็นสไลด์แว็บหายกลางประโยค
- * ให้เป็นการกดสั่งเองเสมอ และอย่ากดระหว่างฉาย
+ *  4. อยากให้อัปเดตเอง: Run → installHourlyTrigger() หนึ่งครั้ง
  * ────────────────────────────────────────────────────────────────────
  */
 
@@ -36,10 +26,9 @@ var CONFIG = {
   // โหมด figma
   FIGMA_FILE_KEY: '5DZ7FTf2wXT1RNbgFVSfVU',
   FIGMA_PAGE_NAME: 'Deck 2026',    // ดึงเฉพาะเฟรมในหน้านี้
-  // 2 = 3840×2160 — คมพอสำหรับฉายและ print แล้ว (สไลด์จริงกว้าง 1920)
-  // เคยตั้ง 4 (7680×4320) แล้ว sync ชนเพดาน 6 นาทีของ Apps Script: 33 ล้านพิกเซล × 12 ใบ
-  // ทั้ง render ทั้งโหลดทั้งยัดเข้า Slides ไม่ทัน · ขยับเป็น 3 ได้ถ้าอยากคมกว่านี้และยอมรอนานขึ้น
-  FIGMA_SCALE: 2,
+  // 4 = 7680×4320 (~0.6 MB/สไลด์) คมสุดที่ Figma ให้ · ทั้งเล่ม ~7 MB
+  // ถ้า sync ช้าหรือไฟล์อืด ลดเป็น 3 (5760×4320, ~0.4 MB) ตายังแยกไม่ออกบนโปรเจกเตอร์
+  FIGMA_SCALE: 4,
 
   // โหมด drive
   FOLDER_ID: '15jmJLM66xBEp9F_zLjznLZ6zNWoezVJ_',
@@ -55,7 +44,6 @@ function syncDeck() {
   var deck = SlidesApp.openById(CONFIG.PRESENTATION_ID);
   var report = [];
 
-  Logger.log('เริ่มวาง %s สไลด์', items.length);
   items.forEach(function (item) {
     var slides = deck.getSlides();
     var slide = slides[item.number - 1] || deck.appendSlide(SlidesApp.PredefinedLayout.BLANK);
@@ -63,10 +51,9 @@ function syncDeck() {
     slide.getPageElements().forEach(function (el) { el.remove(); });
     fitToSlide_(deck, slide.insertImage(item.blob));
     report.push(item.number + ' ← ' + item.name);
-    Logger.log('  %s/%s  %s', report.length, items.length, item.name);
   });
 
-  // สไลด์ส่วนเกินท้ายเล่ม (เช่นหน้าเปล่าที่ Google ใส่มาให้ตอนสร้างไฟล์) เอาออก
+  // สไลด์ส่วนเกินท้ายเล่ม (เช่นหน้าเปล่าที่ Google ใส่มาให้ตอนสร้างไฟล์) เอาออกimage.png
   deck.getSlides().slice(items.length).forEach(function (s) { s.remove(); });
 
   Logger.log('synced %s slides\n%s', report.length, report.join('\n'));
@@ -93,7 +80,6 @@ function imagesFromFigma_() {
   if (!frames.length) return [];
 
   // 2) ขอ URL รูปทีเดียวทุกเฟรม (Figma render ให้แล้วส่ง URL ชั่วคราวกลับมา)
-  Logger.log('เจอ %s เฟรมในหน้า %s — กำลังให้ Figma render ที่ scale %s', frames.length, CONFIG.FIGMA_PAGE_NAME, CONFIG.FIGMA_SCALE);
   var ids = frames.map(function (f) { return f.id; }).join(',');
   var rendered = fetchJson_(
     'https://api.figma.com/v1/images/' + CONFIG.FIGMA_FILE_KEY +
@@ -147,33 +133,11 @@ function fitToSlide_(deck, picture) {
   picture.setTop((pageH - picture.getHeight()) / 2);
 }
 
-/** เมนู Alpha X ในแถบเมนูของ Slides — เปิดไฟล์แล้วสั่ง sync ได้เลยไม่ต้องเข้า Apps Script */
-function onOpen() {
-  SlidesApp.getUi()
-    .createMenu('Alpha X')
-    .addItem('Sync deck from Figma', 'syncDeckFromMenu')
-    .addToUi();
-}
-
-/** ทางเข้าจากเมนู — ถามยืนยันก่อน เพราะ sync เขียนทับทุกสไลด์ */
-function syncDeckFromMenu() {
-  var ui = SlidesApp.getUi();
-  var answer = ui.alert(
-    'Sync deck from Figma',
-    'ทุกสไลด์จะถูกเขียนทับด้วยของล่าสุดจาก Figma\n\nอย่าสั่งระหว่างกำลังพรีเซนต์',
-    ui.ButtonSet.OK_CANCEL);
-  if (answer !== ui.Button.OK) return;
-
-  var report = syncDeck();
-  ui.alert('เสร็จแล้ว', 'อัปเดต ' + report.length + ' สไลด์', ui.ButtonSet.OK);
-}
-
-/** เผื่อเคยตั้ง trigger รายชั่วโมงไว้ก่อนหน้า — เรียกครั้งเดียวเพื่อล้างทิ้ง */
-function removeAutoTriggers() {
-  var removed = 0;
+/** อัปเดตเองทุกชั่วโมง — รันครั้งเดียวพอ (รันซ้ำไม่สร้าง trigger ซ้อน) */
+function installHourlyTrigger() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === 'syncDeck') { ScriptApp.deleteTrigger(t); removed++; }
+    if (t.getHandlerFunction() === 'syncDeck') ScriptApp.deleteTrigger(t);
   });
-  Logger.log('ลบ trigger อัตโนมัติแล้ว %s ตัว', removed);
-  return removed;
+  ScriptApp.newTrigger('syncDeck').timeBased().everyHours(1).create();
+  Logger.log('ตั้ง trigger รายชั่วโมงให้ syncDeck แล้ว');
 }
