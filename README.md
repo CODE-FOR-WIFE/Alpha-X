@@ -11,22 +11,21 @@ Workspace ของ Code for Wife สำหรับ pitch งาน revamp เ�
 
 ```text
 demo/      Next.js static export — หน้า Home และ Club
-deck/      Pitch deck (deck.html) + script export PNG
-brief/     เอกสารต้นทางจากลูกค้า + research ภายใน
+brief/     เอกสารต้นทางจากลูกค้า + research + deck-spec.md (เนื้อหาสไลด์สำหรับทำใน Figma)
 fonts/     ฟอนต์ ALPHA X, Playfair, Trirong, Anuphan (self-host)
-tokens.css design tokens กลาง ใช้ร่วมกันทั้ง deck / progress / demo
+tokens.css design tokens กลาง ใช้ร่วมกันทั้ง progress / demo / deck
 ```
 
 ## รัน
 
 ```bash
-bun serve.ts        # progress + deck → http://localhost:4321
+bun serve.ts        # progress → http://localhost:4321
 cd demo && pnpm install && pnpm dev     # demo → http://localhost:3000
-cd deck && pnpm install && pnpm export  # export สไลด์เป็น PNG → deck/exports/
 python3 check-contrast.py               # ต้องขึ้น ALL PASS ก่อนใช้ token สี
 ```
 
-Deck: ลูกศรซ้าย/ขวาเปลี่ยนสไลด์ · URL hash (`#7`) เปิดตรงสไลด์ · [Google Slides](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit)
+Deck: ทำใน [Figma](https://www.figma.com/design/5DZ7FTf2wXT1RNbgFVSfVU/AlphaX) (page `Deck 2026`) — ระบบและเนื้อหาอยู่ที่ `brief/deck-spec.md`
+ส่งลูกค้าผ่าน [Google Slides](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit): `scripts/slides-sync.gs` (Apps Script) ดึงรูปจาก Figma API มาวางในสไลด์ให้เอง — กด Run หรือปล่อย trigger รายชั่วโมง (วิธีติดตั้งอยู่ในหัวไฟล์)
 
 ## Design system
 

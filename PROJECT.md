@@ -11,63 +11,13 @@
 
 ## Deliverables
 
-### 1. Pitch Deck (HTML app ไฟล์เดียว → export PNG → Google Slides)
+### 1. Pitch Deck (ทำใน Figma — เปลี่ยนวิธี 30 ส.ค. 2026)
 
-ไฟล์: `deck/deck.html` — **ทุกสไลด์อยู่ไฟล์เดียว** (`<section>` ละสไลด์, เวที 1920×1080)
+เดิมเป็น `deck/deck.html` + export PNG — **ลบออกจาก repo แล้ว** เพราะจัด layout ใน Figma เร็วกว่าไล่แก้ HTML แล้ว re-export
 
-**Controller (แถบล่าง ซ่อนตัวเองตอน export):**
-- สลับหน้า: ปุ่ม ‹ › + คีย์บอร์ด ←/→ + ตัวเลข `3/11` + deep-link `#3` (ให้ headless เรียกทีละหน้าได้)
-- **Export PNG** หน้าปัจจุบัน @2x (3840×2160) — ใช้ modern-screenshot (SVG foreignObject — รองรับ oklch + ฟอนต์ custom ที่ html2canvas ไม่รองรับ)
-- ปุ่ม **Open Google Slides** — ฝัง URL นี้: https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit
-- โฟลเดอร์ Drive เก็บรูป: https://drive.google.com/drive/folders/1cjHvQbKdd3ynzMvzjGUS1Xm1F6DDGvgv ("AlphaX — Deck Assets")
-- Fallback คุณภาพสูงสุด: `deck/export-all.sh` วน headless Chrome แคปทุกหน้าจาก `#1..#N`
-
-หมายเหตุ: `01-cover.html` เดิมจะถูก merge เข้า deck.html เป็น section แรกแล้วลบทิ้ง
-
-**โครงต่อสไลด์ (สถานะ: ✅ เคาะแล้ว รอ build):**
-
-**S1 — Cover** *(ดีไซน์เสร็จแล้วใน 01-cover.html รอ merge)*
-Layout: hero image ขวา + gradient กลืนดำซ้าย · โลโก้จริงบนซ้าย · eyebrow + "Wealth with *Passion*" (serif, italic ทอง) + sub ไทย · footer CFW/วันที่
-
-**S1.5 — Who We Are (Code for Wife)** *(เพิ่ม 24 ส.ค. — รวมเป็น 12 สไลด์)*
-Layout: intro บริษัท — positioning + "ไม่ทิ้งกันหลังส่งมอบ" (โยงแพ็กเกจ MA) + บริการ 3 แถว · รอจาก CFW: โลโก้ลูกค้า/ผลงาน + รายชื่อทีม+role
-
-**S2 — Why Revamp (before → after)**
-Layout: จอแยกซ้าย-ขวา · ซ้าย "TODAY" = screenshot เว็บเดิมบนการ์ดสว่าง + 3 pain (โทนลีสซิ่ง / product-first / ไม่สะท้อน HNWI) · ขวา "VISION" = crop mockup ใหม่บนดำ + 3 gain · แถบล่าง: บริบทธุรกิจ — เป้าพอร์ต 20,000 ลบ. + แผน IPO 4–5 ปี = แบรนด์ต้องพร้อมก่อน
-Asset: screenshot เว็บเดิม (แคปเอง) + crop จาก S7
-
-**S3 — ลูกค้า 3 กลุ่ม (ใช้ persona ที่ Alpha X ประกาศเอง)**
-Layout: 3 คอลัมน์เท่ากัน — Passion Investment / Early Adopters / Symbol of Success · แต่ละคอลัมน์: ชื่อ (serif) → insight 1 บรรทัด → "เว็บใหม่ให้อะไร" → map ไป section (Club hub / digital experience / Products) · เส้นเชื่อมลง sitemap
-Icon: lucide (import lib — ห้ามวาดเอง/ห้ามอีโมจิ)
-
-**S4 — Brand Persona & Mood**
-Layout: แบบหน้า BRAND PERSONA ใน proposal — 3 ภาพ portrait เรียงแถว ทับคำ PRESTIGE / TRUSTWORTHY / EFFORTLESS · บนขวา: brand statement 2 บรรทัด · ล่าง: brand values 4 คำ (Passion·Expertise·Exclusivity·Trust)
-Asset: gen Magnific 3 ภาพ (lobby หรู / handshake ขาวดำ / หนัง+กาแฟ effortless)
-
-**S5 — Design System (จุดขายหลัก — สไลด์เดียวที่แน่นได้)**
-Layout: 2 โซน · ซ้าย Foundations: จานสี oklch (swatch + ชื่อ token), type specimen 3 เสียง (ALPHA X font จริง + Playfair/Trirong โชว์ ไทย/EN), spacing scale แท่งไล่ระดับ · ขวา Components: ปุ่ม 3 แบบ × states (default/hover/disabled), การ์ด, input, chip — **render สดจาก tokens.css ไม่ใช่รูป**
-Punchline: "แก้ token ตัวเดียว ทั้งเว็บเปลี่ยนตาม"
-
-**S6 — Sitemap 5 หน้า**
-Layout: tree แนวนอน (CSS grid boxes) — root alphaxclub.com → 5 ใบ · แต่ละใบ: ชื่อหน้า + role 1 บรรทัด (Home=First Impression · About=Trust · Products=Solutions · Club=Magnet · Contact=Conversion) · ไฮไลต์ Club ด้วยขอบทอง = จุดต่างจากเว็บเดิม
-
-**S7 — Key Screens** *(ทำท้ายสุด — screenshot จาก demo จริง)*
-Layout: 2 browser frame เฉียงซ้อนกัน — Home (dark hero) + Club hub (editorial grid) · caption จุดเด่นข้างละ 3 ข้อ · badge "กดเล่นได้จริง → สไลด์สุดท้าย"
-
-**S8 — Alpha X Club = Magnet**
-Layout: ซ้าย: บทสรุป strategy (ทำไม content คือเหตุผลให้กลับมา + cadence ≥1/สัปดาห์ + SEO/AEO keywords) · ขวา: preview magazine grid 3 เสา The Collector / The Explorer / The Connoisseur (การ์ดหัวข้อบทความตัวอย่างเสาละ 1)
-Asset: ภาพประกอบบทความ gen Magnific 3 ภาพ (นาฬิกา vintage / สนามกอล์ฟ / whisky)
-
-**S9 — Tech & Security**
-Layout: แถว architecture: Next.js 16 → Payload CMS → Postgres บน Azure (กล่องต่อลูกศร CSS) · การ์ดขวา: SCBX security checklist (VA โดย vendor · Pentest โดย Alpha X · source scan · PDPA/cookie) · แถบล่าง: <2s load · GA4 · TH/EN
-Hook: "เว็บปัจจุบันก็ Next.js — ทีมเดิมรับช่วงต่อได้ทันที ไม่เริ่มจากศูนย์"
-
-**S10 — Timeline & Investment**
-Layout: แถบ 8 สัปดาห์แนวนอน 5 เฟส (WK1 Wireframe / WK2 UI / WK3-5 Dev+CMS / WK6-7 UAT+VA / WK8 Go-live) + จุด gate "sign-off ก่อน dev" · กล่องขวา: 470,000 บาท + optional MA 30,000/เดือน + warranty 1 เดือน
-
-**S11 — Live Demo & Close**
-Layout: กลางจอ: QR ใหญ่ + URL Vercel + "สัมผัสได้เลยตอนนี้" · ล่าง: ขอบเขตที่ demo ครอบคลุม + ติดต่อ CFW · จบด้วย tagline
-Asset: QR gen ตอนได้ URL จริง
+- **เนื้อหา + สเปคทุกสไลด์:** `brief/deck-spec.md` — frame 1920×1080, token สี/ฟอนต์/type scale, copy ครบ 11 สไลด์, รายการ placeholder ที่ยังรอข้อมูล
+- ปลายทางเดิมยังใช้ได้: [Google Slides](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit) · [Drive — AlphaX Deck Assets](https://drive.google.com/drive/folders/1cjHvQbKdd3ynzMvzjGUS1Xm1F6DDGvgv)
+- screenshot เว็บปัจจุบันสำหรับสไลด์ before/after: `brief/assets/current-site.png`
 
 ### 2. Vercel Demo — "หน้าบังหน้า กดได้จริง"
 
@@ -97,7 +47,7 @@ Asset: QR gen ตอนได้ URL จริง
 - **รูปจริงเป็นหลัก**: photography ขาวดำ/เกรดเข้ม (สถาปัตยกรรม, รถ, ถนน)
 - **เส้น hairline แดง** คาดใต้แถบหัวทุกสไลด์เนื้อหา + wordmark มุมสไลด์
 - **หัวเรื่อง serif แดง/ขาว + เลขลำดับ 01. 02. serif แดง**
-- โค้ดเป็น CSS utility ใน deck.html แล้ว: `.fx .glow / .diag-red / .diag-glass / .xline` + hairline อัตโนมัติ
+- เดิมเป็น CSS utility ใน deck.html (`.glow / .diag-red / .diag-glass / .xline`) — ตอนนี้ทำเป็น layer/component ใน Figma แทน · เวอร์ชันที่ใช้จริงบนเว็บอยู่ที่ `.x-mark` ใน demo
 
 **สัดส่วน layout ต้นแบบ (2 หน้าที่แทนชี้ว่า "แบ่งสัดส่วนดีมาก"):**
 - **แบบ TOC**: เนื้อหา 2/3 (heading serif แดงใหญ่บนซ้าย + รายการเลข `01.` serif แดง จัด 2×2, คำอธิบายสั้น) : ภาพจริง 1/3 เต็มคอลัมน์ขวา · wordmark+เส้นแดงคาดบน
@@ -134,7 +84,7 @@ Asset: QR gen ตอนได้ URL จริง
 
 ## กติกาประจำโปรเจกต์
 
-- **เริ่มงานทุกครั้ง: รัน dev server** — `bun serve.ts` (background) → http://localhost:4321 (progress) · /deck/deck.html (deck) · live reload อัตโนมัติ · พอร์ตชน: `lsof -ti:4321 | xargs kill`
+- **เริ่มงานทุกครั้ง: รัน dev server** — `bun serve.ts` (background) → http://localhost:4321 (progress) · live reload อัตโนมัติ · พอร์ตชน: `lsof -ti:4321 | xargs kill`
 - **ทุก session ต้องอัปเดต `progress.html`** — อัปเดตวันที่/สถานะ, timeline, checklist และเพิ่ม Session Log ใหม่บนสุด · ใช้เปิดใน weekly meeting กับ CFW
 
 ## QA ก่อนส่ง
