@@ -12,7 +12,6 @@
 - [ ] ปุ่ม social share + save-for-later ในหน้า Club (sitemap 03 · ยังไม่เคาะว่าจำเป็นตอนขายไหม)
 
 ### Deck — Figma
-- [ ] Branding ตาม proposal หน้า 14–15: hairline ใต้หัวเป็นแดง · หัวเรื่อง serif แดงบางสไลด์ · red radial glow · ระนาบทแยง
 - [ ] เติม asset ที่ยัง placeholder: credentials CFW · screenshot เว็บเก่า/ใหม่ · icon persona 3 · ภาพ mood 3 · ภาพ pillar 3 (QR + URL ใส่แล้ว)
 
 ### ส่งมอบ
@@ -22,6 +21,7 @@
 ## ✅ Done
 
 ### 2026-08-30 (รอบเย็น)
+- Branding deck ตาม proposal หน้า 14–15: hairline ใต้หัวเป็นแดง (แก้ที่ component ตัวเดียว) · red glow + ระนาบทแยงขนานขาแดง 31.3° ครบทั้ง 12 สไลด์ · เขียนสเปคไว้ใน brief/deck-spec.md
 - QR ของเดโม: โมดูลกลม + finder มุมมน + โลโก้ X (เรนเดอร์จาก `icon.svg` ตัวจริง) — `scripts/gen-qr.py` ตรวจสแกนกลับได้ถึง 200px
 - S12: ใส่ QR จริง + URL `alpha-x-blond.vercel.app` · S08/S12 คืนคำว่า every interaction is live
 - S07: เขียนเนื้อหาแต่ละหน้าตาม sitemap ตรง ๆ (trifold 3 อย่าง, Awards/Compliance/Alpha X Plus, Maps/toggle)

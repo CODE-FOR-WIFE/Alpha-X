@@ -40,6 +40,12 @@ Display = **Playfair Display**. Everything else = **Anuphan** — standing in fo
 | `Card` | Title, Body | every text card in the deck |
 | `Placeholder` | Label | anything still awaiting an asset — the label says what is missing |
 
+## ภาษาภาพจาก proposal (หน้า 14–15)
+ทุกสไลด์มีสามชั้นนี้ซ้อนอยู่ใต้เนื้อหา — ตั้งไว้แล้วในไฟล์ ไม่ต้องวางเอง:
+- **เส้นแดงใต้หัวสไลด์** — hairline ใน `Slide/Head` เป็น `brand/red` ที่ opacity 55% (เต็ม 100 จะตะโกนกลบหัวเรื่อง)
+- **red glow** — ellipse สีแบรนด์ + layer blur 300 มุมขวา · ปก opacity 16% · สไลด์เนื้อหา 9%
+- **ระนาบทแยงโปร่งแสง** — vector สี่เหลี่ยมด้านขนาน ขอบเอียง 31.3° เท่าขาแดงของ X · ปก 3% · สไลด์เนื้อหา 2.2%
+
 ## The X motif
 Two vector legs, the site's own signature: a red leg at 31.3° crossed near its head by a short white leg. On the cover (top right) and the closing slide (mirrored). Same construction as `.x-mark` in the demo site.
 
