@@ -17,6 +17,12 @@
  *  3. Run → syncDeck() (กด Authorize ครั้งแรก)
  *  4. หลังจากนั้นสั่ง sync ได้จากเมนูในตัว Slides เลย: Alpha X → Sync deck from Figma
  *
+ * ต้องเข้าทาง Extensions → Apps Script ของไฟล์ Slides เท่านั้น ถ้าสร้างเป็น standalone project
+ * (script.google.com โดยตรง) เมนู Alpha X จะไม่โผล่ เพราะ onOpen ผูกกับไฟล์ที่เปิดอยู่
+ *
+ * รันครั้งหนึ่งใช้เวลาราวหนึ่งถึงสองนาที — Apps Script ตัดที่ 6 นาที ดู Execution log
+ * ระหว่างรันได้ว่าไปถึงสไลด์ไหนแล้ว
+ *
  * ไม่มี trigger อัตโนมัติโดยตั้งใจ — sync ลบทุก element ในสไลด์ก่อนวางรูปใหม่
  * ถ้ามันเด้งขึ้นมากลางการพรีเซนต์ ผู้ชมจะเห็นสไลด์แว็บหายกลางประโยค
  * ให้เป็นการกดสั่งเองเสมอ และอย่ากดระหว่างฉาย
@@ -30,9 +36,10 @@ var CONFIG = {
   // โหมด figma
   FIGMA_FILE_KEY: '5DZ7FTf2wXT1RNbgFVSfVU',
   FIGMA_PAGE_NAME: 'Deck 2026',    // ดึงเฉพาะเฟรมในหน้านี้
-  // 4 = 7680×4320 (~0.6 MB/สไลด์) คมสุดที่ Figma ให้ · ทั้งเล่ม ~7 MB
-  // ถ้า sync ช้าหรือไฟล์อืด ลดเป็น 3 (5760×4320, ~0.4 MB) ตายังแยกไม่ออกบนโปรเจกเตอร์
-  FIGMA_SCALE: 4,
+  // 2 = 3840×2160 — คมพอสำหรับฉายและ print แล้ว (สไลด์จริงกว้าง 1920)
+  // เคยตั้ง 4 (7680×4320) แล้ว sync ชนเพดาน 6 นาทีของ Apps Script: 33 ล้านพิกเซล × 12 ใบ
+  // ทั้ง render ทั้งโหลดทั้งยัดเข้า Slides ไม่ทัน · ขยับเป็น 3 ได้ถ้าอยากคมกว่านี้และยอมรอนานขึ้น
+  FIGMA_SCALE: 2,
 
   // โหมด drive
   FOLDER_ID: '15jmJLM66xBEp9F_zLjznLZ6zNWoezVJ_',
@@ -48,6 +55,7 @@ function syncDeck() {
   var deck = SlidesApp.openById(CONFIG.PRESENTATION_ID);
   var report = [];
 
+  Logger.log('เริ่มวาง %s สไลด์', items.length);
   items.forEach(function (item) {
     var slides = deck.getSlides();
     var slide = slides[item.number - 1] || deck.appendSlide(SlidesApp.PredefinedLayout.BLANK);
@@ -55,6 +63,7 @@ function syncDeck() {
     slide.getPageElements().forEach(function (el) { el.remove(); });
     fitToSlide_(deck, slide.insertImage(item.blob));
     report.push(item.number + ' ← ' + item.name);
+    Logger.log('  %s/%s  %s', report.length, items.length, item.name);
   });
 
   // สไลด์ส่วนเกินท้ายเล่ม (เช่นหน้าเปล่าที่ Google ใส่มาให้ตอนสร้างไฟล์) เอาออก
@@ -84,6 +93,7 @@ function imagesFromFigma_() {
   if (!frames.length) return [];
 
   // 2) ขอ URL รูปทีเดียวทุกเฟรม (Figma render ให้แล้วส่ง URL ชั่วคราวกลับมา)
+  Logger.log('เจอ %s เฟรมในหน้า %s — กำลังให้ Figma render ที่ scale %s', frames.length, CONFIG.FIGMA_PAGE_NAME, CONFIG.FIGMA_SCALE);
   var ids = frames.map(function (f) { return f.id; }).join(',');
   var rendered = fetchJson_(
     'https://api.figma.com/v1/images/' + CONFIG.FIGMA_FILE_KEY +
