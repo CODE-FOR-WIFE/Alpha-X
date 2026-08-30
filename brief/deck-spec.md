@@ -55,7 +55,9 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 | # | Slide | Notes |
 |---|---|---|
 | 01 | Cover | "Wealth with *Passion*" · X motif |
-| 02 | Who We Are | CFW-Intelligent message — belief lead, the two-question pull quote, philosophy card, three capability cards |
+| 02 | Who We Are | CFW-Intelligent message — belief lead, the two-question pull quote, philosophy card, three capability cards, company identity block |
+
+> **Alpha X is CFW's first client.** The deck therefore never claims past work — no client logos, no case studies, no "trusted by". The proof it offers instead is the working demo (S08, S12): *you don't have to take our word for it, open it yourself.* Keep it that way if the deck is extended.
 | 03 | Why Revamp | Today vs Vision columns · why-now bar (THB 20bn, IPO 4–5 yrs, new asset classes) |
 | 04 | Audience | Three personas, each mapped to what the new site gives them |
 | 05 | Brand Persona | "Calm. Intelligent. Trusted. *Never trying too hard.*" · 3 moods · 4 values |
@@ -70,12 +72,6 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 ## Still awaiting
 | Slide | What | From |
 |---|---|---|
-| 02 | Client logos / selected work / credentials · project team names | CFW |
-| 03 | Current-site screenshot (`brief/assets/current-site.png`) · new-site crop | demo |
-| 04 | Three persona icons (lucide) | design |
-| 05 | Three mood images | image gen |
 | 06 | Component states card | during build |
-| 08 | Two demo screenshots | after Vercel deploy |
-| 09 | Three pillar images | image gen |
-| 12 | Live URL + QR | after deploy |
-| — | `demo/public/assets/alpha-x-story.mp4` — video lightbox points at it but the file is missing | เจนหรือหาไฟล์วิดีโอ |
+
+ที่เหลือเติมครบแล้ว: S03 เว็บเก่า/ใหม่ · S04 icon persona · S05 mood 3 ใบ · S08 screenshot เดโมจริง · S09 pillar 3 ใบ · S12 QR + URL
