@@ -27,17 +27,22 @@ export function SiteMenu() {
   return (
     <>
       <button
+        aria-controls="site-menu-panel"
         aria-expanded={open}
-        aria-label={open ? 'Close navigation' : 'Open navigation'}
+        aria-label="Open navigation"
         className="menu-trigger"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen(true)}
         type="button"
       >
-        {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        <Menu aria-hidden="true" />
       </button>
 
-      <div className={`menu-panel${open ? ' menu-panel--open' : ''}`} aria-hidden={!open}>
+      <div className={`menu-panel${open ? ' menu-panel--open' : ''}`} aria-hidden={!open} id="site-menu-panel">
         <div className="menu-panel__inner">
+          {/* ปุ่มปิดอยู่ใน panel ไม่ใช่ใน nav — จะได้เลื่อนเข้าออกพร้อม drawer ตัวเดียวกัน */}
+          <button aria-label="Close navigation" className="menu-trigger menu-close" onClick={() => setOpen(false)} type="button">
+            <X aria-hidden="true" />
+          </button>
           <p className="eyebrow muted">Menu</p>
           <div className="hairline" />
           <nav aria-label="Primary navigation" className="menu-panel__links">

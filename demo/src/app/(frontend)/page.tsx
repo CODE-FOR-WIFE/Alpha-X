@@ -1,34 +1,56 @@
-import { ArrowDown, ArrowUpRight, CirclePlay, ShieldCheck } from 'lucide-react'
+import { ArrowUpRight, Phone, ShieldCheck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { HeroCarousel } from '@/components/hero-carousel'
 import { SiteMenu } from '@/components/site-menu'
+import { VideoLightbox } from '@/components/video-lightbox'
 import { Button } from '@/components/ui/button'
 
-const heroA = '/assets/hero-car-a.jpg'
-const heroB = '/assets/hero-car-b.jpg'
-const currentSite = '/assets/current-site.png'
 const logo = '/assets/alpha-x-logo.png'
 const showcaseCar = '/assets/showcase-car.png'
 
-const expertise: Array<{ title: string; body: string; image: string; position: string }> = [
+// รูปชุดเดียวกับ hero carousel (gen จาก gen-hero-images.mjs)
+// การ์ดเป็นกรอบ 4:5 แต่ต้นฉบับ 3:2 และ subject อยู่ขวาของเฟรม → ต้องดัน objectPosition ไป 70%
+// ไม่งั้น crop กลางจะได้พื้นที่ว่างฝั่งซ้ายที่เว้นไว้ให้ headline แทนที่จะได้ตัว subject
+const CARD_CROP = '70% center'
+
+const expertise: Array<{ title: string; kicker: string; body: string; image: string }> = [
   {
-    title: 'Automotive',
+    kicker: 'Vehicle Financing',
+    title: 'Luxury Car',
     body: 'Financing structured around exceptional vehicles and the ambitions behind every acquisition.',
-    image: heroA,
-    position: 'center 58%',
+    image: '/assets/hero-automotive.jpg',
   },
   {
-    title: 'Marine & Aviation',
-    body: 'Specialist guidance for private journeys across water and sky, handled with absolute discretion.',
-    image: heroB,
-    position: 'center 48%',
+    kicker: 'Motorcycle Financing',
+    title: 'Big Bike',
+    body: 'Terms shaped for large-displacement machines, arranged as quickly as the decision to own one.',
+    image: '/assets/hero-bigbike.jpg',
   },
   {
-    title: 'Collectible Assets',
-    body: 'Considered solutions for rare objects, meaningful collections and opportunities beyond convention.',
-    image: currentSite,
-    position: 'center 20%',
+    kicker: 'Marine Financing',
+    title: 'Yacht / Riverboat',
+    body: 'Specialist guidance for vessels on open water and river, handled with absolute discretion.',
+    image: '/assets/hero-marine.jpg',
+  },
+]
+
+const socials = [
+  {
+    label: 'Facebook',
+    href: 'https://facebook.com/alphaxclub',
+    path: 'M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z',
+  },
+  {
+    label: 'X',
+    href: 'https://x.com/alphaxclub',
+    path: 'M17.5 3h3l-6.6 7.5L21.7 21h-6l-4.7-6.1L5.6 21h-3l7-8L2.6 3h6.2l4.2 5.6L17.5 3zm-1 16h1.6L8.1 4.7H6.4L16.5 19z',
+  },
+  {
+    label: 'Instagram',
+    href: 'https://instagram.com/alphaxclub',
+    path: 'M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.9c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.9-.1c-3.2-.1-4.8-1.7-4.9-4.9-.1-1.3-.1-1.6-.1-4.9s0-3.6.1-4.9C2.3 4 3.9 2.4 7.1 2.3 8.4 2.2 8.8 2.2 12 2.2zm0 4.9a4.9 4.9 0 100 9.8 4.9 4.9 0 000-9.8zm0 8.1a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zm5.1-8.3a1.1 1.1 0 100-2.3 1.1 1.1 0 000 2.3z',
   },
 ]
 
@@ -38,14 +60,14 @@ const insights = [
     category: 'The Collector',
     title: 'The enduring value of objects chosen with conviction',
     body: 'A closer look at the relationship between provenance, personal meaning and long-term value.',
-    image: heroB,
+    image: '/assets/hero-story-collector.jpg',
   },
   {
     date: '18 August 2026',
     category: 'The Explorer',
     title: 'Why the journey remains the rarest luxury',
     body: 'The machines, places and decisions that turn movement into an expression of identity.',
-    image: heroA,
+    image: '/assets/hero-story-explorer.jpg',
   },
 ]
 
@@ -61,25 +83,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="hero section-dark">
-        <div className="shell hero__copy">
-          <p className="eyebrow">SCBX Private Financial Solutions</p>
-          <h1>
-            Wealth with <em>Passion</em>
-          </h1>
-          <p className="hero__lede">
-            Beyond wealth lies what moves you. We shape financial possibilities around the life, objects and
-            experiences that matter most.
-          </p>
-        </div>
-        <div className="hero__visual" aria-hidden="true">
-          <Image alt="" fill priority sizes="100vw" src={heroA} />
-          <div className="hero__shade" />
-        </div>
-        <a className="hero__scroll" href="#expertise">
-          Explore <ArrowDown aria-hidden="true" />
-        </a>
-      </section>
+      <HeroCarousel />
 
       <section className="section-light ruled-section" id="expertise">
         <div className="shell section-pad">
@@ -96,7 +100,7 @@ export default function HomePage() {
           </div>
 
           <div className="expertise-grid" data-reveal>
-            {expertise.map((item, index) => (
+            {expertise.map((item) => (
               <article className="expertise-card" key={item.title}>
                 <div className="expertise-card__image">
                   <Image
@@ -104,11 +108,11 @@ export default function HomePage() {
                     fill
                     sizes="(max-width: 767px) 100vw, 33vw"
                     src={item.image}
-                    style={{ objectPosition: item.position }}
+                    style={{ objectPosition: CARD_CROP }}
                   />
                 </div>
                 <div className="expertise-card__content">
-                  <p className="eyebrow muted">0{index + 1}</p>
+                  <p className="eyebrow muted">{item.kicker}</p>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
                   <Link aria-label={`Explore ${item.title}`} href="/#contact">
@@ -123,12 +127,9 @@ export default function HomePage() {
 
       <section className="film section-dark" id="about">
         <div className="shell film__frame">
-          <Image alt="A journey shaped by personal ambition" data-reveal="zoom" fill sizes="100vw" src={heroB} />
+          <Image alt="A journey shaped by personal ambition" data-reveal="zoom" fill sizes="100vw" src="/assets/hero-brand-film.jpg" />
           <div className="film__overlay" />
-          <button aria-label="Play the ALPHA X story" className="film__play" type="button">
-            <CirclePlay aria-hidden="true" />
-            <span>Discover the ALPHA X story</span>
-          </button>
+          <VideoLightbox />
         </div>
       </section>
 
@@ -138,7 +139,7 @@ export default function HomePage() {
             <p className="eyebrow accent">The ALPHA X standard</p>
             <h2 data-reveal="rise">Expertise that understands what is personal.</h2>
             <div className="values__image">
-              <Image alt="ALPHA X private financial expertise" fill sizes="(max-width: 991px) 100vw, 48vw" src={heroA} />
+              <Image alt="A private consultation room at ALPHA X" fill sizes="(max-width: 991px) 100vw, 48vw" src="/assets/hero-brand-advisory.jpg" />
             </div>
           </div>
           <div className="values__list" data-reveal>
@@ -205,7 +206,7 @@ export default function HomePage() {
 
       <section className="closing section-dark" id="contact">
         <div className="shell closing__card">
-          <Image alt="" data-reveal="zoom" fill sizes="100vw" src={heroB} />
+          <Image alt="" data-reveal="zoom" fill sizes="100vw" src="/assets/hero-marine.jpg" />
           <div className="closing__overlay" />
           <div className="closing__content" data-reveal>
             <p className="eyebrow">Private consultation</p>
@@ -220,19 +221,60 @@ export default function HomePage() {
 
       <footer className="footer section-dark">
         <div className="shell footer__grid">
-          <div>
+          <div className="footer__brand">
             <Image alt="ALPHA X" height={28} src={logo} width={130} />
             <p>Wealth with Passion.</p>
+            <div className="footer__security">
+              <ShieldCheck aria-hidden="true" />
+              <span>Part of SCBX</span>
+            </div>
           </div>
+
+          <nav aria-label="Products">
+            <p className="eyebrow muted">Our products</p>
+            {expertise.map((item) => (
+              <Link href="/#expertise" key={item.title}>
+                {item.title}
+              </Link>
+            ))}
+          </nav>
+
           <nav aria-label="Footer navigation">
+            <p className="eyebrow muted">Company</p>
             <Link href="/#expertise">Expertise</Link>
             <Link href="/#about">About</Link>
             <Link href="/club">Alpha X Club</Link>
             <Link href="/#contact">Contact</Link>
           </nav>
-          <div className="footer__security"><ShieldCheck aria-hidden="true" /><span>Part of SCBX</span></div>
+
+          <address className="footer__contact">
+            <p className="eyebrow muted">Contact</p>
+            <p>
+              888 Soi Lat Phrao 112, Khwaeng Phlabphla,
+              <br />
+              Wangthonglang, Bangkok 10310, Thailand
+            </p>
+            <a href="tel:+6620095200">
+              <Phone aria-hidden="true" /> 02 009 5200
+            </a>
+            <a href="mailto:contact@alphaxclub.com">contact@alphaxclub.com</a>
+            <div className="footer__social">
+              {socials.map((social) => (
+                <a aria-label={social.label} href={social.href} key={social.label} rel="noreferrer" target="_blank">
+                  <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+                    <path d={social.path} />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </address>
         </div>
-        <div className="shell footer__bottom"><span>© 2026 ALPHA X</span><span>Privacy · Terms</span></div>
+        <div className="shell footer__bottom">
+          <span>© 2026 ALPHA X</span>
+          {/* ข้อความบังคับของผู้ให้สินเชื่อไทย — เว็บจริงขึ้นไว้ท้ายหน้าเหมือนกัน */}
+          <span>Borrow only what you need and can repay · Effective rate 4%–12% p.a.</span>
+          <span>Privacy · Terms</span>
+        </div>
       </footer>
     </main>
   )

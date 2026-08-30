@@ -37,7 +37,10 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--black); }
+/* เคยใส่ overflow-x: clip ตรงนี้กัน scroll แนวนอน แต่มันทำให้ smooth scroll ตายทั้งหน้า
+   (anchor link / scrollIntoView ไม่ขยับ เหลือแต่ behavior: instant ที่ยังทำงาน)
+   ย้ายไปคลิปที่ .showcase ซึ่งเป็นต้นเหตุจริงแทน — ดู comment ตรงนั้น */
+html { scroll-behavior: smooth; scroll-padding-top: 92px; background: var(--black); }
 body { margin: 0; background: var(--black); color: var(--cream); font-family: 'ALPHA X', sans-serif; }
 body, button, a { -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
@@ -72,14 +75,22 @@ h2 { max-width: 760px; margin-bottom: 0; font-size: clamp(48px, 6vw, 86px); lett
 h3 { margin-bottom: 14px; font-size: clamp(26px, 2.2vw, 36px); letter-spacing: -.03em; line-height: 1.06; }
 p { font-size: 17px; line-height: 1.7; }
 
-.site-nav { position: absolute; inset: 0 0 auto; z-index: 30; height: 92px; border-bottom: 1px solid var(--line-dark); color: white; }
-.site-nav--light { position: relative; background: var(--paper); border-color: var(--line-light); color: var(--black); }
+/* nav ติดบนตลอด — ใส่พื้นทึบไปเลยแทนที่จะสลับสีตอน scroll เพราะพอเลื่อนพ้น hero
+   จะไปทับ section พื้น cream แล้วตัวอักษรสีขาวหายทันที ทางที่ใช้ scroll-driven animation
+   ทำได้แบบไม่ต้องมี JS แต่ Safari ยังไม่รองรับ ปล่อยโปร่งใสบน Safari = อ่านไม่ออก
+   ห้ามใส่ backdrop-filter ตรงนี้: มันทำให้ .site-nav กลายเป็น containing block ของลูกที่เป็น
+   position:fixed → .menu-panel ที่อยู่ข้างในจะไปอิงกล่อง nav สูง 92px แทน viewport แล้ว drawer พัง
+   พื้นทึบอยู่แล้วด้วย เบลอไม่ได้ช่วยอะไรนอกจากเปลือง paint */
+.site-nav { position: fixed; inset: 0 0 auto; z-index: 30; height: 92px; border-bottom: 1px solid var(--line-dark); background: var(--black); color: white; }
 .site-nav__grid { position: relative; display: grid; height: 100%; grid-template-columns: 1fr auto 1fr; align-items: center; }
 .brand { grid-column: 2; grid-row: 1; }
 .brand img { width: 124px; height: auto; filter: brightness(0) invert(1); }
-.site-nav--light .brand img { filter: none; }
 .menu-trigger { display: grid; width: 46px; height: 46px; padding: 0; border: 0; background: transparent; cursor: pointer; place-items: center; position: relative; z-index: 50; }
 .menu-trigger svg { width: 24px; }
+/* เปิด drawer แล้วซ่อน hamburger — drawer ทับตำแหน่งมันอยู่แล้ว และเอาออกจาก tab order ด้วย */
+.menu-trigger[aria-expanded='true'] { visibility: hidden; }
+/* -11px = ครึ่งของระยะที่ icon 24px ลอยอยู่กลางปุ่ม 46px ให้ขอบขวา icon ตรงกับปลาย hairline พอดี */
+.menu-close { position: absolute; top: 23px; right: calc(clamp(28px, 6vw, 78px) - 11px); }
 .nav-cta { grid-column: 3; grid-row: 1; justify-self: end; }
 .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 12px; padding: 12px 20px; border: 1px solid var(--cream); background: var(--cream); color: var(--black); font-size: 13px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; transition: background .2s, color .2s; }
 .button:hover { background: white; }
@@ -90,7 +101,7 @@ p { font-size: 17px; line-height: 1.7; }
 .button--icon { width: 48px; padding: 0; }
 .menu-panel { position: fixed; z-index: 40; inset: 0 auto 0 0; width: min(600px, 100%); background: #111114; color: white; transform: translateX(-102%); transition: transform .55s cubic-bezier(.22, 1, .36, 1); visibility: hidden; }
 .menu-panel--open { transform: none; visibility: visible; }
-.menu-panel__inner { display: flex; min-height: 100%; flex-direction: column; padding: 132px clamp(28px, 6vw, 78px) 48px; }
+.menu-panel__inner { position: relative; display: flex; min-height: 100%; flex-direction: column; padding: 132px clamp(28px, 6vw, 78px) 48px; }
 .menu-panel .hairline { margin: 20px 0 26px; }
 .menu-panel__links { display: flex; flex-direction: column; }
 .menu-panel__links a { display: flex; align-items: baseline; gap: 24px; border-bottom: 1px solid var(--line-dark); padding: 17px 0; font-family: 'Playfair Display', serif; font-size: clamp(34px, 6vh, 58px); line-height: 1; }
@@ -100,13 +111,32 @@ p { font-size: 17px; line-height: 1.7; }
 
 .hero { position: relative; display: grid; min-height: 100svh; overflow: hidden; align-items: center; isolation: isolate; }
 .hero__copy { position: relative; z-index: 3; padding-top: 110px; }
-.hero h1 { max-width: 930px; margin: 22px 0 28px; font-size: clamp(72px, 10.5vw, 164px); letter-spacing: -.065em; line-height: .82; }
+.hero h1 { max-width: 930px; margin: 22px 0 28px; font-size: clamp(60px, 8.5vw, 132px); letter-spacing: -.065em; line-height: .82; }
 .hero h1 em { color: var(--red); font-weight: 400; }
 .hero__lede { max-width: 575px; margin-bottom: 0; color: var(--muted-dark); font-size: clamp(17px, 1.35vw, 21px); }
 .hero__visual { position: absolute; z-index: -1; inset: 0; }
-.hero__visual img { object-fit: cover; object-position: 70% center; transform: scale(1.04); }
+/* สไลด์ทุกใบซ้อนกันแล้ว crossfade ด้วย opacity — ไม่ต้อง unmount รูปเลยไม่มีจังหวะกระพริบตอนโหลด */
+.hero__visual img { object-fit: cover; transform: scale(1.04); opacity: 0; transition: opacity .9s ease-in-out; }
+.hero__visual img.is-active { opacity: 1; }
+.hero__slide { animation: hero-slide-in .7s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes hero-slide-in { from { opacity: 0; transform: translateY(18px); } }
+/* pagination ใช้เลข 01/02/03 แบบเดียวกับ expertise cards / values list — เส้นเปล่า 3 เส้นไม่มี anchor
+   ให้อ่าน เลขทำให้รู้ทันทีว่ามีกี่สไลด์และอยู่ใบไหน ส่วนเส้นใต้เลขเป็นทั้ง indicator และตัวนับเวลา */
+.hero__pager { margin-top: 48px; }
+.hero__pager-label { margin: 0 0 14px; color: var(--cream); font-size: 12px; font-weight: 300; letter-spacing: .22em; text-transform: uppercase; }
+.hero__pager-row { display: flex; gap: 30px; margin-left: -2px; }
+/* padding แนวตั้งดัน hit area ให้ถึง 44px ตาม touch target โดยที่เส้นยังบาง */
+.hero__pager button { display: grid; padding: 12px 2px; border: 0; background: transparent; cursor: pointer; gap: 10px; }
+.hero__pager-num { color: rgb(255 255 255 / 55%); font-size: 11px; letter-spacing: .18em; transition: color .35s; }
+.hero__pager-track { position: relative; display: block; width: 54px; height: 1px; background: rgb(255 255 255 / 18%); transition: background .35s; }
+.hero__pager-track span { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--red); }
+.hero__pager button:hover .hero__pager-num { color: rgb(255 255 255 / 80%); }
+.hero__pager button:hover .hero__pager-track { background: rgb(255 255 255 / 45%); }
+.hero__pager button.is-active .hero__pager-num { color: var(--cream); }
+.hero__pager button.is-active .hero__pager-track span { animation-name: hero-progress; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes hero-progress { to { width: 100%; } }
 .hero__shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(5 5 7 / 98%) 0%, rgb(5 5 7 / 78%) 40%, rgb(5 5 7 / 12%) 78%), linear-gradient(0deg, rgb(5 5 7 / 80%) 0%, transparent 38%); }
-.hero__scroll { position: absolute; z-index: 3; right: max(24px, calc((100vw - 1320px) / 2)); bottom: 34px; display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+.hero__scroll { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: 34px; display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
 .hero__scroll svg { width: 16px; }
 .split-heading { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .55fr); gap: clamp(42px, 9vw, 132px); align-items: end; padding: clamp(42px, 6vw, 74px) 0 clamp(60px, 8vw, 104px); }
 .split-heading .eyebrow { margin-bottom: 22px; }
@@ -127,6 +157,19 @@ p { font-size: 17px; line-height: 1.7; }
 .film__play { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; border: 0; background: transparent; cursor: pointer; }
 .film__play svg { width: 72px; height: 72px; stroke-width: 1; }
 .film__play span { font-size: 12px; letter-spacing: .17em; text-transform: uppercase; }
+/* lightbox = <dialog> ของ browser เอง: Esc / focus trap / inert หลังฉาก มาให้อยู่แล้ว
+   reset ค่า default ของ dialog (max-width 100%-margin, border, พื้นขาว) ทิ้งก่อน */
+/* margin: auto — tailwind preflight ล้าง margin ของทุก element ทิ้ง รวมถึง margin:auto ที่ UA ใช้จัดกลาง dialog */
+.lightbox { width: min(1180px, 92vw); max-width: none; margin: auto; padding: 0; border: 0; background: transparent; color: var(--cream); }
+.lightbox::backdrop { background: rgb(5 5 7 / 94%); backdrop-filter: blur(8px); }
+.lightbox[open] { animation: lightbox-in .4s cubic-bezier(.22, 1, .36, 1); }
+@keyframes lightbox-in { from { opacity: 0; transform: translateY(14px); } }
+/* วางปุ่มปิดเป็นแถวเหนือวิดีโอ — ไม่ต้อง absolute เพราะ dialog ใน top layer จัดกลางด้วย margin auto
+   ถ้าไป position: relative ทับ จะทำให้การจัดกลางพัง */
+.lightbox__bar { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+.lightbox__bar button { display: grid; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; place-items: center; }
+.lightbox__bar svg { width: 24px; }
+.lightbox video { display: block; width: 100%; max-height: 78vh; aspect-ratio: 16 / 9; background: #000; object-fit: contain; }
 .values__grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: clamp(42px, 7vw, 96px); }
 .values__grid::before { content: ''; grid-column: 2; grid-row: 1; background: var(--line-light); }
 .values__statement { grid-column: 1; grid-row: 1; }
@@ -151,7 +194,10 @@ p { font-size: 17px; line-height: 1.7; }
    + ภาพเต็มความกว้าง aspect 16/9 object-fit cover
    ต่างจากต้นทางเฉพาะ typography ที่ใช้ token ALPHA X แทน Clashdisplay
    ───────────────────────────────────────────────────────────────────── */
-.showcase { padding-top: var(--pad); text-align: center; }
+/* ต้นเหตุ scroll แนวนอนทั้งหน้า: [data-reveal='zoom'] ขยาย .showcase__stage เป็น scale(4)
+   = กว้าง 4 เท่าจอ ตอนยังไม่ reveal พี่น้อง section อื่นที่ zoom เหมือนกันมี parent overflow:hidden
+   ครอบอยู่แล้ว เหลือ section นี้ section เดียวที่ยังไม่มี */
+.showcase { padding-top: var(--pad); overflow: hidden; text-align: center; }
 .showcase__intro { max-width: 1024px; padding-bottom: clamp(56px, 8vw, 128px); }
 .showcase__intro h2 { max-width: none; margin-bottom: 16px; }
 .showcase__intro p { max-width: 768px; margin-inline: auto; font-size: 20px; line-height: 1.5; opacity: .5; }
@@ -167,16 +213,29 @@ p { font-size: 17px; line-height: 1.7; }
 .closing__content h2 { margin: 25px 0; }
 .closing__content > p:not(.eyebrow) { color: var(--muted-dark); }
 .closing__content .button { margin-top: 18px; }
-.footer { border-top: 1px solid var(--line-dark); padding: 72px 0 28px; }
-.footer__grid { display: grid; grid-template-columns: 1fr auto auto; gap: 80px; align-items: start; padding-bottom: 72px; }
-.footer__grid img { width: 130px; }
-.footer__grid p { margin-top: 20px; color: var(--muted-dark); }
-.footer nav { display: grid; gap: 13px; }
-.footer__security { display: flex; align-items: center; gap: 10px; color: var(--muted-dark); }
+.footer { border-top: 1px solid var(--line-dark); padding: 80px 0 28px; }
+/* 4 คอลัมน์น้ำหนักใกล้กัน — ของเดิม brand เป็น 1fr เลยกินที่ว่างไปครึ่งจอ
+   คอลัมน์ลิงก์ไปกองอยู่ขวาสุด ดูเหมือนวางเกยขอบมากกว่าจัด layout */
+.footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.4fr; gap: clamp(36px, 4vw, 72px); align-items: start; padding-bottom: 64px; }
+.footer__brand img { width: 130px; }
+.footer__brand > p { margin: 20px 0 0; color: var(--muted-dark); }
+.footer nav { display: grid; align-content: start; gap: 13px; }
+.footer nav .eyebrow, .footer__contact .eyebrow { margin-bottom: 5px; color: var(--muted-dark); }
+.footer__security { display: flex; align-items: center; gap: 10px; margin-top: 28px; color: var(--muted-dark); }
 .footer__security svg { width: 20px; }
-.footer__bottom { display: flex; justify-content: space-between; border-top: 1px solid var(--line-dark); padding-top: 24px; color: var(--muted-dark); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+/* <address> default เป็น italic — ที่นี่เป็นข้อมูลติดต่อ ไม่ใช่การเน้น */
+.footer__contact { display: grid; align-content: start; gap: 13px; font-style: normal; }
+.footer__contact p:not(.eyebrow) { margin: 0; color: var(--muted-dark); line-height: 1.65; }
+.footer__contact a { display: flex; align-items: center; gap: 9px; }
+.footer__contact a svg { width: 17px; }
+.footer__social { display: flex; gap: 6px; margin-top: 8px; }
+/* กล่อง 44x44 ตาม touch target แต่ icon เห็น 19px */
+.footer__social a { display: grid; width: 44px; height: 44px; margin-left: -11px; place-items: center; color: var(--muted-dark); transition: color .3s; }
+.footer__social a:hover { color: var(--cream); }
+.footer__social svg { width: 19px; height: 19px; }
+.footer__bottom { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line-dark); padding-top: 24px; color: var(--muted-dark); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 
-.club-page { min-height: 100vh; }
+.club-page { min-height: 100vh; padding-top: 92px; }
 .club-hero { padding: clamp(80px, 10vw, 146px) 0; border-bottom: 1px solid var(--line-light); }
 .club-hero h1 { max-width: 1020px; margin: 26px 0; font-size: clamp(76px, 11vw, 170px); letter-spacing: -.065em; line-height: .85; }
 .club-hero > p:last-child { max-width: 620px; margin-bottom: 0; color: var(--muted-light); font-size: 20px; }
@@ -200,20 +259,26 @@ p { font-size: 17px; line-height: 1.7; }
   .values__statement, .values__list { grid-column: 1; grid-row: auto; }
   .values__list { margin-top: 70px; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
-  .footer__security { grid-column: 2; grid-row: 1; justify-self: end; }
+  .footer__grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 767px) {
   :root { --shell: min(100% - 32px, 620px); --pad: 80px; }
+  html { scroll-padding-top: 76px; }
   p { font-size: 16px; }
   .site-nav { height: 76px; }
+  .club-page { padding-top: 76px; }
+  .menu-close { top: 15px; }
   .brand img { width: 104px; }
   .hero { min-height: 820px; align-items: end; }
   .hero__copy { padding: 170px 0 126px; }
-  .hero h1 { font-size: clamp(66px, 20vw, 102px); }
+  .hero h1 { font-size: clamp(54px, 16vw, 84px); }
   .hero__visual img { object-position: 64% center; }
   .hero__shade { background: linear-gradient(0deg, rgb(5 5 7 / 96%) 4%, rgb(5 5 7 / 48%) 70%, rgb(5 5 7 / 45%)); }
-  .hero__scroll { right: 16px; bottom: 24px; }
+  .hero__scroll { bottom: 24px; }
+  .hero__pager { margin-top: 32px; }
+  .hero__pager-row { gap: 22px; }
+  .hero__pager-track { width: 44px; }
   .split-heading { grid-template-columns: 1fr; gap: 30px; align-items: start; }
   .expertise-card { display: block; }
   .expertise-card__content > p:not(.eyebrow) { min-height: 0; }
@@ -225,11 +290,10 @@ p { font-size: 17px; line-height: 1.7; }
   .closing__overlay { background: linear-gradient(0deg, rgb(0 0 0 / 92%), rgb(0 0 0 / 12%)); }
   .closing__content { align-self: end; padding: 38px 24px 54px; }
   .footer__grid { grid-template-columns: 1fr; gap: 42px; }
-  .footer__security { grid-column: 1; grid-row: auto; justify-self: start; }
   .club-grid { grid-template-columns: 1fr; }
   .club-story--lead { grid-column: auto; }
   .club-story--lead .club-story__image { aspect-ratio: 4 / 5; }
-  .footer__bottom { gap: 18px; flex-direction: column; }
+  .footer__bottom { gap: 14px; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
