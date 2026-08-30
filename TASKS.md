@@ -5,6 +5,25 @@
 ## 🔄 กำลังทำ
 - (ว่าง — รอคิวถัดไป)
 
+## ✅ รีวิวเดค 12 หน้า
+
+สถานะ: `✅ ผ่าน` · `🔍 กำลังดู` · `⬜ ยังไม่ดู` — บอกผมว่าหน้าไหนผ่าน ผมอัปเดตให้
+
+| # | สไลด์ | สถานะ | หมายเหตุ / สิ่งที่ต้องแก้ |
+|---|---|---|---|
+| S01 | Cover | ✅ ผ่าน | |
+| S02 | Who We Are — CFW | 🔍 กำลังดู | |
+| S03 | Why Revamp | ⬜ | |
+| S04 | Audience — 3 personas | ⬜ | |
+| S05 | Brand Persona | ⬜ | |
+| S06 | Design System | ⬜ | ยังมีช่อง component states ว่างอยู่ |
+| S07 | Architecture — 5 หน้า | ⬜ | |
+| S08 | Key Screens | ⬜ | |
+| S09 | Content Strategy | ⬜ | |
+| S10 | Tech & Security | ⬜ | |
+| S11 | Timeline & Investment | ⬜ | |
+| S12 | Live Demo | ⬜ | |
+
 ## ⏳ ค้างไว้ตั้งใจ
 - **Slides ยังไม่ sync** — ของใน Figma ใหม่กว่าที่อยู่ใน Google Slides แล้ว (asset ครบ S03/S04/S05/S08/S09)
   ตั้งใจสะสมงานก่อนแล้วค่อย sync ทีเดียว เพราะรันครั้งหนึ่งใช้เวลาราวหนึ่งนาที
