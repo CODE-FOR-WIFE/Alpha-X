@@ -1,0 +1,92 @@
+# Deploy demo/ to a Vercel Hobby project via CLI.
+# Required repo secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Do not import this GitHub org repo in the Vercel dashboard — Hobby blocks that.
+
+name: Deploy Vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "demo/**"
+      - ".github/workflows/deploy-vercel.yml"
+  pull_request:
+    paths:
+      - "demo/**"
+      - ".github/workflows/deploy-vercel.yml"
+  workflow_dispatch:
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+concurrency:
+  group: vercel-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        working-directory: demo
+        run: vercel pull --yes --environment=${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        working-directory: demo
+        run: vercel build ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        working-directory: demo
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          IS_PRODUCTION: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+        run: |
+          if [ "$IS_PRODUCTION" = "true" ]; then
+            URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          else
+            URL=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "### Deployed to [$URL]($URL)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request' && steps.deploy.outputs.url != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            const body = `**Vercel preview:** ${url}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(
+              (comment) => comment.body?.includes('**Vercel preview:**') && comment.user?.type === 'Bot',
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
