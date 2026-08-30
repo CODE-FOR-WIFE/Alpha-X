@@ -62,6 +62,14 @@ const SUBJECTS = {
   'story-provenance': [STORY,
     'A classic vintage grand tourer under a dust sheet pulled halfway back inside a dark private garage, chrome trim and one headlamp catching a shaft of light from a high window.'],
 
+  // mood board ในเดค S05 Brand Persona — คนละ register กับ hero: ไม่มี subject เป็นสินค้า
+  'mood-prestige': [STORY,
+    'The empty grand lobby of a private members club at night, marble floor and tall columns lit by one warm golden pool of light, a single crimson thread in a rug at the edge of frame, no people.'],
+  'mood-trust': [STORY,
+    'A close crop of two hands mid-handshake in black and white, cuffs of tailored suits visible, one narrow beam of light across the wrists, background falling to pure black.'],
+  'mood-effortless': [STORY,
+    'A still life of a worn leather club chair arm with a folded newspaper and a pair of gloves resting on it, one soft light from the left, deep shadow filling the rest of the frame.'],
+
   // section เนื้อหา (ไม่ใช่ product / ไม่ใช่บทความ)
   'brand-advisory': [STORY,
     'Two empty leather armchairs facing each other across a small dark marble table in a private consultation room at night, a single low lamp between them, floor-to-ceiling window showing a blurred city far below.'],

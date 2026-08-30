@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, Share2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -6,12 +6,27 @@ import { SiteMenu } from '@/components/site-menu'
 
 const logo = '/assets/alpha-x-logo.png'
 
-// รูปจับคู่กับหัวข้อบทความทีละอัน ไม่ใช่รูปรถ 2 ใบวนซ้ำ
-const stories = [
-  ['The Collector', 'Objects with a story worth preserving', '/assets/hero-story-collector.jpg'],
-  ['The Explorer', 'The roads that reward taking your time', '/assets/hero-story-explorer.jpg'],
-  ['The Connoisseur', 'A quieter definition of rarity', '/assets/hero-story-connoisseur.jpg'],
-  ['The Collector', 'Design, provenance and enduring value', '/assets/hero-story-provenance.jpg'],
+// 3 เสาตาม sitemap 03 — แต่ละเสามีคำอธิบายของตัวเองแล้วค่อยตามด้วยบทความ
+// จัดแบบนี้เพราะลูกค้าอ่าน sitemap แล้วต้องเห็นว่าเสาไหนอยู่ตรงไหนทันที
+const pillars = [
+  {
+    name: 'The Collector',
+    blurb: 'Watches, art and classic cars — provenance, asset spotlights and the case for objects as collateral.',
+    stories: [
+      ['Objects with a story worth preserving', '/assets/hero-story-collector.jpg'],
+      ['Design, provenance and enduring value', '/assets/hero-story-provenance.jpg'],
+    ],
+  },
+  {
+    name: 'The Explorer',
+    blurb: 'Private golf clubs, hidden destinations and the journeys worth clearing a week for.',
+    stories: [['The roads that reward taking your time', '/assets/hero-story-explorer.jpg']],
+  },
+  {
+    name: 'The Connoisseur',
+    blurb: 'Dining, whisky and the rooms where the right introductions happen.',
+    stories: [['A quieter definition of rarity', '/assets/hero-story-connoisseur.jpg']],
+  },
 ] as const
 
 // Alpha Events ตาม sitemap 03 — ข่าวบริษัทและหมุดหมาย PR แยกจากบทความไลฟ์สไตล์
@@ -39,16 +54,31 @@ export default function ClubPage() {
         <h1>A life well considered.</h1>
         <p>Perspectives on objects, journeys and rituals chosen with intention.</p>
       </section>
-      <section className="club-grid shell">
-        {stories.map(([category, title, image], index) => (
-          <article className={index === 0 ? 'club-story club-story--lead' : 'club-story'} key={title}>
-            <div className="club-story__image"><Image alt="" fill sizes={index === 0 ? '100vw' : '50vw'} src={image} /></div>
-            <p className="eyebrow muted">{category} · 0{index + 1}</p>
-            <h2>{title}</h2>
-            <Link href={`/club/${slug(title)}`}>Read story <ArrowUpRight aria-hidden="true" /></Link>
-          </article>
-        ))}
-      </section>
+      {pillars.map((pillar) => (
+        <section className="club-pillar shell" key={pillar.name}>
+          <div className="club-pillar__head">
+            <h2>{pillar.name}</h2>
+            <p>{pillar.blurb}</p>
+          </div>
+          <div className="club-grid">
+            {pillar.stories.map(([title, image], index) => (
+              <article className={pillar.stories.length === 1 ? 'club-story club-story--lead' : 'club-story'} key={title}>
+                <div className="club-story__image">
+                  <Image alt="" fill sizes={pillar.stories.length === 1 ? '100vw' : '50vw'} src={image} />
+                </div>
+                <p className="eyebrow muted">{pillar.name} · 0{index + 1}</p>
+                <h3>{title}</h3>
+                <div className="club-story__actions">
+                  <Link href={`/club/${slug(title)}`}>Read story <ArrowUpRight aria-hidden="true" /></Link>
+                  {/* share + save ตาม sitemap 03 — ปุ่มจริงต่อ API ตอน build เต็ม */}
+                  <button aria-label={`Share ${title}`} type="button"><Share2 aria-hidden="true" /></button>
+                  <button aria-label={`Save ${title} for later`} type="button"><Bookmark aria-hidden="true" /></button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
 
       <section className="club-events">
         <div className="shell">

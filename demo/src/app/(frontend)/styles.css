@@ -297,8 +297,21 @@ p { font-size: 17px; line-height: 1.7; }
 .club-hero > p:last-child { max-width: 620px; margin-bottom: 0; color: var(--muted-light); font-size: 20px; }
 .back-link { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 78px; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
 .back-link svg { width: 16px; }
-.club-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px 36px; padding: 72px 0 140px; }
+/* หน้า Club แบ่งเป็น 3 เสาตาม sitemap — หัวเสาเป็น serif ใหญ่คั่น ให้เห็นโครงตั้งแต่ scan */
+.club-pillar { padding-top: clamp(56px, 7vw, 92px); }
+.club-pillar__head { display: grid; grid-template-columns: minmax(0, .8fr) minmax(280px, 1fr); gap: clamp(24px, 5vw, 72px); align-items: end; padding-bottom: clamp(28px, 4vw, 44px); border-bottom: 1px solid var(--line-light); }
+.club-pillar__head h2 { margin: 0; font-size: clamp(34px, 3.6vw, 52px); }
+.club-pillar__head p { margin: 0; color: var(--muted-light); }
+.club-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px 36px; padding: clamp(36px, 4vw, 56px) 0 0; }
+.club-story h3 { max-width: 700px; margin: 16px 0 20px; font-family: 'Playfair Display', serif; font-size: clamp(26px, 2.4vw, 38px); font-weight: 300; letter-spacing: -.03em; line-height: 1.06; }
+/* แถวปุ่ม: อ่านบทความเป็นหลัก · share/save เป็นไอคอนเงียบ ๆ ด้านข้าง */
+.club-story__actions { display: flex; align-items: center; gap: 8px; }
+.club-story__actions a { margin-right: 10px; }
+.club-story__actions button { display: grid; width: 40px; height: 40px; border: 1px solid var(--line-light); background: transparent; color: var(--muted-light); cursor: pointer; place-items: center; transition: color .25s, border-color .25s; }
+.club-story__actions button:hover { border-color: var(--black); color: var(--black); }
+.club-story__actions svg { width: 17px; }
 .club-story--lead { grid-column: 1 / -1; }
+.club-pillar:last-of-type .club-grid { padding-bottom: clamp(60px, 7vw, 96px); }
 .club-story__image { position: relative; aspect-ratio: 16 / 10; margin-bottom: 26px; overflow: hidden; }
 .club-story--lead .club-story__image { aspect-ratio: 16 / 7; }
 .club-story__image img { object-fit: cover; filter: grayscale(.7); }

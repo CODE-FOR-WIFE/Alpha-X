@@ -6,19 +6,18 @@
 - (ว่าง — รอคิวถัดไป)
 
 ## 📋 Queue
-
-### Demo — เว็บ
-- [ ] Club page: จัดบทความให้เห็นเป็น 3 เสา Collector / Explorer / Connoisseur ชัดขึ้น
-- [ ] ปุ่ม social share + save-for-later ในหน้า Club (sitemap 03 · ยังไม่เคาะว่าจำเป็นตอนขายไหม)
-
-### Deck — Figma
-- [ ] เติม asset ที่ยัง placeholder: credentials CFW · screenshot เว็บเก่า/ใหม่ · icon persona 3 · ภาพ mood 3 · ภาพ pillar 3 (QR + URL ใส่แล้ว)
+- [ ] credentials CFW ใน S02 (รอโลโก้ลูกค้า/ผลงานจาก CFW — ทำเองไม่ได้)
+- [ ] S06 ช่อง component states (เติมตอน build จริง)
 
 ### ส่งมอบ
 - [ ] commit + push งานรอบนี้ → CI ของ China deploy ขึ้น https://alpha-x-blond.vercel.app/ อัตโนมัติ
 - [ ] ตั้ง Share ของ Google Slides เป็น Anyone with the link · Viewer
 
 ## ✅ Done
+
+### 2026-08-30 (รอบดึก)
+- เติม asset ในเดคจนเหลือช่องเดียว: S03 เว็บเก่า/ใหม่เทียบกัน · S04 icon persona 3 (vector เส้นแดง) · S05 mood 3 ใบ (เจนใหม่) · S08 screenshot เดโมจริง 2 หน้า · S09 pillar 3 ใบ (ใช้รูป story ที่มีอยู่)
+- Club page: จัดเป็น 3 เสา Collector / Explorer / Connoisseur พร้อมคำอธิบายเสา + ปุ่ม share / save ทุกบทความ
 
 ### 2026-08-30 (รอบเย็น)
 - Branding deck ตาม proposal หน้า 14–15: hairline ใต้หัวเป็นแดง (แก้ที่ component ตัวเดียว) · red glow + ระนาบทแยงขนานขาแดง 31.3° ครบทั้ง 12 สไลด์ · เขียนสเปคไว้ใน brief/deck-spec.md
