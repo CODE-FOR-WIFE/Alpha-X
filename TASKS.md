@@ -8,22 +8,25 @@
 ## 📋 Queue
 
 ### Demo — เว็บ
-- [ ] Club page: เพิ่มโซน **Alpha Events** (Company News & PR) ตาม sitemap 03
 - [ ] Club page: จัดบทความให้เห็นเป็น 3 เสา Collector / Explorer / Connoisseur ชัดขึ้น
 - [ ] ปุ่ม social share + save-for-later ในหน้า Club (sitemap 03 · ยังไม่เคาะว่าจำเป็นตอนขายไหม)
 
 ### Deck — Figma
-- [ ] S07 Architecture: ระบุ Expertise Trifold ที่ถูกใน node Home (ตอนนี้เขียนรวม ๆ)
-- [ ] S08 + S12: คืนคำว่า "every interaction is live" ได้แล้ว เพราะวิดีโอเล่นได้จริงแล้ว
 - [ ] Branding ตาม proposal หน้า 14–15: hairline ใต้หัวเป็นแดง · หัวเรื่อง serif แดงบางสไลด์ · red radial glow · ระนาบทแยง
-- [ ] เติม asset ที่ยัง placeholder: credentials CFW · screenshot เว็บเก่า/ใหม่ · icon persona 3 · ภาพ mood 3 · ภาพ pillar 3 · QR + URL จริง
+- [ ] เติม asset ที่ยัง placeholder: credentials CFW · screenshot เว็บเก่า/ใหม่ · icon persona 3 · ภาพ mood 3 · ภาพ pillar 3 (QR + URL ใส่แล้ว)
 
 ### ส่งมอบ
 - [ ] commit + push งานรอบนี้ → CI ของ China deploy ขึ้น https://alpha-x-blond.vercel.app/ อัตโนมัติ
-- [ ] เอา URL Vercel + QR ใส่ S12 (CI/CD พร้อมแล้ว — https://alpha-x-blond.vercel.app/)
 - [ ] ตั้ง Share ของ Google Slides เป็น Anyone with the link · Viewer
 
 ## ✅ Done
+
+### 2026-08-30 (รอบเย็น)
+- QR ของเดโม: โมดูลกลม + finder มุมมน + โลโก้ X (เรนเดอร์จาก `icon.svg` ตัวจริง) — `scripts/gen-qr.py` ตรวจสแกนกลับได้ถึง 200px
+- S12: ใส่ QR จริง + URL `alpha-x-blond.vercel.app` · S08/S12 คืนคำว่า every interaction is live
+- S07: เขียนเนื้อหาแต่ละหน้าตาม sitemap ตรง ๆ (trifold 3 อย่าง, Awards/Compliance/Alpha X Plus, Maps/toggle)
+- Club page: เพิ่มโซน **Alpha Events** (Company News & PR) ตาม sitemap 03
+- แก้ OG preview ไม่ขึ้น — `metadataBase` เคยชี้ `www.alphaxclub.com` ที่ยังไม่มีไฟล์ เปลี่ยนเป็นโดเมนที่ deploy จริง
 
 ### 2026-08-30 (รอบบ่าย)
 - Hero ครบ 5 สไลด์ตาม sitemap (Car · Yacht/River Boat · Aircraft · Luxury Property · Gold-backed) — เจนรูป 3 ใบใหม่ด้วย gpt-image-2, เอา Big Bike ออก

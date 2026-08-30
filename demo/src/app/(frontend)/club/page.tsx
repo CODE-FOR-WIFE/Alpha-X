@@ -14,6 +14,13 @@ const stories = [
   ['The Collector', 'Design, provenance and enduring value', '/assets/hero-story-provenance.jpg'],
 ] as const
 
+// Alpha Events ตาม sitemap 03 — ข่าวบริษัทและหมุดหมาย PR แยกจากบทความไลฟ์สไตล์
+const events = [
+  ['12 September 2026', 'Alpha X at the Bangkok Concours', 'A weekend of rare machinery, hosted alongside the collectors who keep them running.'],
+  ['28 August 2026', 'Partnership — Private Aviation Network', 'Direct access to aircraft management and acquisition specialists across the region.'],
+  ['05 August 2026', 'Alpha X Plus opens to members', 'The wider platform behind the club, now open to existing clients by invitation.'],
+] as const
+
 const slug = (title: string) =>
   title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
@@ -41,6 +48,28 @@ export default function ClubPage() {
             <Link href={`/club/${slug(title)}`}>Read story <ArrowUpRight aria-hidden="true" /></Link>
           </article>
         ))}
+      </section>
+
+      <section className="club-events">
+        <div className="shell">
+          <div className="hairline" />
+          <div className="club-events__head">
+            <div>
+              <p className="eyebrow accent">Alpha Events</p>
+              <h2>Company news &amp; milestones</h2>
+            </div>
+            <p>Where the club meets in person, and what the platform behind it is building next.</p>
+          </div>
+          <div className="club-events__list">
+            {events.map(([date, title, body]) => (
+              <article key={title}>
+                <p className="eyebrow muted">{date}</p>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
     </main>
   )

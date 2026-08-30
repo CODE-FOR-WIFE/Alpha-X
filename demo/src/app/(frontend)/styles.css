@@ -302,6 +302,17 @@ p { font-size: 17px; line-height: 1.7; }
 .club-story__image { position: relative; aspect-ratio: 16 / 10; margin-bottom: 26px; overflow: hidden; }
 .club-story--lead .club-story__image { aspect-ratio: 16 / 7; }
 .club-story__image img { object-fit: cover; filter: grayscale(.7); }
+/* Alpha Events — โซนข่าวบริษัทท้ายหน้า Club (sitemap 03) แยกน้ำหนักจากบทความไลฟ์สไตล์
+   ด้วยการไม่มีรูป: อ่านเป็นประกาศ ไม่ใช่ editorial */
+.club-events { padding-bottom: clamp(90px, 11vw, 150px); }
+.club-events__head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .55fr); gap: clamp(42px, 9vw, 132px); align-items: end; padding: clamp(42px, 6vw, 74px) 0 clamp(44px, 6vw, 72px); }
+.club-events__head h2 { margin-top: 22px; font-size: clamp(38px, 4.4vw, 62px); }
+.club-events__head > p { margin-bottom: 0; color: var(--muted-light); }
+.club-events__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 48px); }
+.club-events__list article { padding-top: 24px; border-top: 1px solid var(--line-light); }
+.club-events__list h3 { margin: 14px 0 12px; font-size: clamp(22px, 1.8vw, 28px); }
+.club-events__list p:not(.eyebrow) { margin-bottom: 0; color: var(--muted-light); font-size: 16px; }
+
 .club-story h2 { max-width: 700px; margin: 16px 0 24px; font-size: clamp(34px, 4vw, 62px); }
 
 @media (max-width: 991px) {
@@ -356,6 +367,8 @@ p { font-size: 17px; line-height: 1.7; }
   .club-grid { grid-template-columns: 1fr; }
   .club-story--lead { grid-column: auto; }
   .club-story--lead .club-story__image { aspect-ratio: 4 / 5; }
+  .club-events__head { grid-template-columns: 1fr; gap: 26px; align-items: start; }
+  .club-events__list { grid-template-columns: 1fr; gap: 30px; }
   .notfound { padding: 120px 0 70px; }
   .notfound__list { grid-template-columns: 1fr; gap: 22px; }
   .notfound__actions .button { flex: 1 1 100%; }
