@@ -6,8 +6,8 @@ dist/
 .vercel/
 *.log
 preview/
-deck/exports/
 
 # secrets — คีย์ API อยู่ใน .env.local เท่านั้น ห้ามขึ้น git
 .env
 .env.local
+deck-export/

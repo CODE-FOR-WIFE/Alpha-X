@@ -36,4 +36,4 @@ Bun.serve({
     return new Response(file);
   },
 });
-console.log("AlphaX dev server → http://localhost:4321  (progress) · /deck/deck.html (deck)");
+console.log("AlphaX dev server → http://localhost:4321  (progress)");
