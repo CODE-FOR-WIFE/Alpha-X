@@ -235,6 +235,27 @@ p { font-size: 17px; line-height: 1.7; }
 .footer__social svg { width: 19px; height: 19px; }
 .footer__bottom { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line-dark); padding-top: 24px; color: var(--muted-dark); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 
+/* ── X gimmick ──────────────────────────────────────────────────────────
+   ถอดจาก alphaxclub.com (information-bg.png + clip-path ของ section ถัดไป):
+   เส้นแดงแบรนด์เอียง 31.3° + ขาขาวสั้นตัดเป็นตัว X ตรงหัวเส้น วางคร่อมรอยต่อ section
+   แล้วพื้นเฉดของ section ถัดไปถูกตัดเฉียง "ด้วยมุมเดียวกัน" ให้ขอบทแยงต่อกับขาแดงพอดี
+   ต้นฉบับ clip เป็น polygon(792px 0, ... , 0 1296px) → 792/1296 = tan 31.4° = มุมเส้น
+
+   ทั้งเส้นและขอบพื้นจึงอ้าง --x-head (ตำแหน่งหัว X วัดจากซ้าย) ตัวเดียวกัน
+   0.6076 = tan(31.3°) ใช้เลื่อนหาจุดที่เส้นตัดขอบบน section, 1.646 = 1/tan ใช้หาปลายซ้าย
+   ───────────────────────────────────────────────────────────────────── */
+.values { --x-head: 74vw; --x-rise: 96px; --x-len: clamp(240px, 27vw, 400px); --x-edge: calc(var(--x-head) - var(--x-rise) * 0.6076); position: relative; }
+/* พื้นเฉดต่างตัดเฉียงมุมเดียวกับเส้น — ขอบเริ่มตรงจุดที่เส้นแดงตัดขอบบนพอดี */
+.values::before { content: ''; position: absolute; inset: 0; background: #f5f2ea; clip-path: polygon(var(--x-edge) 0, 100% 0, 100% 100%, 0 100%, 0 calc(var(--x-edge) * 1.646)); }
+.values > .shell { position: relative; z-index: 1; }
+/* จุด anchor ขนาดศูนย์ = หัวเส้น ทำให้เส้นกับ clip-path อ้างพิกัดเดียวกันได้ */
+.x-mark { position: absolute; z-index: 2; top: calc(var(--x-rise) * -1); left: var(--x-head); width: 0; height: 0; pointer-events: none; }
+.x-mark::before, .x-mark::after { content: ''; position: absolute; top: 0; left: -1.5px; width: 3px; transform-origin: top center; }
+.x-mark::before { height: var(--x-len); transform: rotate(31.3deg); background: var(--red); }
+/* ขาขาวเอียงสวนทาง คร่อมขาแดงที่ระยะ 10% จากหัว เหมือน png ต้นฉบับ
+   ระยะ translate มาจากเรขาฯ ตรงๆ: จุดกึ่งกลางขาขาวต้องตกบนเส้นแดงพอดี */
+.x-mark::after { height: calc(var(--x-len) * .18); transform: translate(calc(var(--x-len) * -.102), calc(var(--x-len) * .011)) rotate(-33.7deg); background: white; }
+
 .club-page { min-height: 100vh; padding-top: 92px; }
 .club-hero { padding: clamp(80px, 10vw, 146px) 0; border-bottom: 1px solid var(--line-light); }
 .club-hero h1 { max-width: 1020px; margin: 26px 0; font-size: clamp(76px, 11vw, 170px); letter-spacing: -.065em; line-height: .85; }
@@ -286,6 +307,8 @@ p { font-size: 17px; line-height: 1.7; }
   .film__play svg { width: 56px; }
   .values__image { margin-top: 56px; }
   .insights-grid { grid-template-columns: 1fr; gap: 70px; }
+  /* จอแคบ: ดันหัวไปชิดขวาแล้วย่อเส้น ให้ปลายจบเหนือ headline */
+  .values { --x-head: 88vw; --x-rise: 74px; --x-len: 190px; }
   .closing__card { min-height: 660px; }
   .closing__overlay { background: linear-gradient(0deg, rgb(0 0 0 / 92%), rgb(0 0 0 / 12%)); }
   .closing__content { align-self: end; padding: 38px 24px 54px; }

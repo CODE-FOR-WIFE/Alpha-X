@@ -134,6 +134,7 @@ export default function HomePage() {
       </section>
 
       <section className="values section-light">
+        <span aria-hidden="true" className="x-mark" />
         <div className="shell values__grid section-pad">
           <div className="values__statement" data-reveal>
             <p className="eyebrow accent">The ALPHA X standard</p>
