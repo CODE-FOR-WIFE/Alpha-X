@@ -15,7 +15,11 @@
  *     แล้วเก็บใส่ Script Properties (อย่าวางในโค้ด):
  *     Project Settings → Script Properties → Add → key `FIGMA_TOKEN`, value = token
  *  3. Run → syncDeck() (กด Authorize ครั้งแรก)
- *  4. อยากให้อัปเดตเอง: Run → installHourlyTrigger() หนึ่งครั้ง
+ *  4. หลังจากนั้นสั่ง sync ได้จากเมนูในตัว Slides เลย: Alpha X → Sync deck from Figma
+ *
+ * ไม่มี trigger อัตโนมัติโดยตั้งใจ — sync ลบทุก element ในสไลด์ก่อนวางรูปใหม่
+ * ถ้ามันเด้งขึ้นมากลางการพรีเซนต์ ผู้ชมจะเห็นสไลด์แว็บหายกลางประโยค
+ * ให้เป็นการกดสั่งเองเสมอ และอย่ากดระหว่างฉาย
  * ────────────────────────────────────────────────────────────────────
  */
 
@@ -133,11 +137,33 @@ function fitToSlide_(deck, picture) {
   picture.setTop((pageH - picture.getHeight()) / 2);
 }
 
-/** อัปเดตเองทุกชั่วโมง — รันครั้งเดียวพอ (รันซ้ำไม่สร้าง trigger ซ้อน) */
-function installHourlyTrigger() {
+/** เมนู Alpha X ในแถบเมนูของ Slides — เปิดไฟล์แล้วสั่ง sync ได้เลยไม่ต้องเข้า Apps Script */
+function onOpen() {
+  SlidesApp.getUi()
+    .createMenu('Alpha X')
+    .addItem('Sync deck from Figma', 'syncDeckFromMenu')
+    .addToUi();
+}
+
+/** ทางเข้าจากเมนู — ถามยืนยันก่อน เพราะ sync เขียนทับทุกสไลด์ */
+function syncDeckFromMenu() {
+  var ui = SlidesApp.getUi();
+  var answer = ui.alert(
+    'Sync deck from Figma',
+    'ทุกสไลด์จะถูกเขียนทับด้วยของล่าสุดจาก Figma\n\nอย่าสั่งระหว่างกำลังพรีเซนต์',
+    ui.ButtonSet.OK_CANCEL);
+  if (answer !== ui.Button.OK) return;
+
+  var report = syncDeck();
+  ui.alert('เสร็จแล้ว', 'อัปเดต ' + report.length + ' สไลด์', ui.ButtonSet.OK);
+}
+
+/** เผื่อเคยตั้ง trigger รายชั่วโมงไว้ก่อนหน้า — เรียกครั้งเดียวเพื่อล้างทิ้ง */
+function removeAutoTriggers() {
+  var removed = 0;
   ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === 'syncDeck') ScriptApp.deleteTrigger(t);
+    if (t.getHandlerFunction() === 'syncDeck') { ScriptApp.deleteTrigger(t); removed++; }
   });
-  ScriptApp.newTrigger('syncDeck').timeBased().everyHours(1).create();
-  Logger.log('ตั้ง trigger รายชั่วโมงให้ syncDeck แล้ว');
+  Logger.log('ลบ trigger อัตโนมัติแล้ว %s ตัว', removed);
+  return removed;
 }

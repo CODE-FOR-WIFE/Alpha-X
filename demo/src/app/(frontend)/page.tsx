@@ -17,23 +17,32 @@ const CARD_CROP = '70% center'
 
 const expertise: Array<{ title: string; kicker: string; body: string; image: string }> = [
   {
-    kicker: 'Vehicle Financing',
-    title: 'Luxury Car',
-    body: 'Financing structured around exceptional vehicles and the ambitions behind every acquisition.',
-    image: '/assets/hero-automotive.jpg',
+    kicker: 'Financial advisory and service',
+    title: 'Financial Excellence',
+    body: 'Advisory and structuring led by people who read a balance sheet and a collection with the same fluency.',
+    image: '/assets/hero-brand-advisory.jpg',
   },
   {
-    kicker: 'Motorcycle Financing',
-    title: 'Big Bike',
-    body: 'Terms shaped for large-displacement machines, arranged as quickly as the decision to own one.',
-    image: '/assets/hero-bigbike.jpg',
+    kicker: 'Curation & valuation expertise',
+    title: 'Asset Management & Legal Advisory',
+    body: 'Curation, valuation and the legal groundwork that keeps an exceptional asset defensible over time.',
+    image: '/assets/hero-story-provenance.jpg',
   },
   {
-    kicker: 'Marine Financing',
-    title: 'Yacht / Riverboat',
-    body: 'Specialist guidance for vessels on open water and river, handled with absolute discretion.',
-    image: '/assets/hero-marine.jpg',
+    kicker: 'Worldwide network',
+    title: 'Partnership Networks',
+    body: 'A worldwide network of specialists, dealers and institutions opened on your behalf when it matters.',
+    image: '/assets/hero-story-connoisseur.jpg',
   },
+]
+
+// 5 สินเชื่อตาม sitemap หน้า 02 — Our Products · แสดงเป็น solution ไม่ใช่ product list
+const products = [
+  { title: 'Luxury Car', body: 'Exceptional vehicles, financed around the ambition behind the acquisition.' },
+  { title: 'Yacht / River Boat', body: 'Vessels on open water and river, handled with absolute discretion.' },
+  { title: 'Aircraft', body: 'Private aviation structured for owners who measure time differently.' },
+  { title: 'Luxury Property', body: 'Residences and landmark addresses held as part of a wider portfolio.' },
+  { title: 'Gold-backed Finance', body: 'Liquidity released against gold without giving up the position.' },
 ]
 
 const socials = [
@@ -68,6 +77,13 @@ const insights = [
     title: 'Why the journey remains the rarest luxury',
     body: 'The machines, places and decisions that turn movement into an expression of identity.',
     image: '/assets/hero-story-explorer.jpg',
+  },
+  {
+    date: '11 August 2026',
+    category: 'The Connoisseur',
+    title: 'A quieter definition of rarity',
+    body: 'On dining rooms, cellars and the people who make a table worth travelling for.',
+    image: '/assets/hero-story-connoisseur.jpg',
   },
 ]
 
@@ -140,7 +156,7 @@ export default function HomePage() {
             <p className="eyebrow accent">The ALPHA X standard</p>
             <h2 data-reveal="rise">Expertise that understands what is personal.</h2>
             <div className="values__image">
-              <Image alt="A private consultation room at ALPHA X" fill sizes="(max-width: 991px) 100vw, 48vw" src="/assets/hero-brand-advisory.jpg" />
+              <Image alt="A car photographed at night" fill sizes="(max-width: 991px) 100vw, 48vw" src="/assets/hero-automotive.jpg" />
             </div>
           </div>
           <div className="values__list" data-reveal>
@@ -174,6 +190,14 @@ export default function HomePage() {
         <div className="showcase__stage" data-reveal="zoom">
           <Image alt="" sizes="100vw" src={showcaseCar} width={2100} height={813} />
         </div>
+        <div className="shell product-list" data-reveal>
+          {products.map((item) => (
+            <article key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="insights section-light" id="club">
@@ -184,10 +208,15 @@ export default function HomePage() {
               <p className="eyebrow accent">Alpha X Club</p>
               <h2 data-reveal="rise">What&apos;s trending</h2>
             </div>
-            <p>
-              Stories from the worlds of collecting, travel and refined living—selected for people whose interests
-              extend far beyond the ordinary.
-            </p>
+            <div>
+              <p>
+                Stories from the worlds of collecting, travel and refined living—selected for people whose interests
+                extend far beyond the ordinary.
+              </p>
+              <Link className="split-heading__link" href="/club">
+                Enter Alpha X Club <ArrowUpRight aria-hidden="true" />
+              </Link>
+            </div>
           </div>
           <div className="insights-grid" data-reveal>
             {insights.map((item) => (

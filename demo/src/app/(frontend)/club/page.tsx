@@ -14,6 +14,9 @@ const stories = [
   ['The Collector', 'Design, provenance and enduring value', '/assets/hero-story-provenance.jpg'],
 ] as const
 
+const slug = (title: string) =>
+  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
 export default function ClubPage() {
   return (
     <main className="club-page section-light">
@@ -35,7 +38,7 @@ export default function ClubPage() {
             <div className="club-story__image"><Image alt="" fill sizes={index === 0 ? '100vw' : '50vw'} src={image} /></div>
             <p className="eyebrow muted">{category} · 0{index + 1}</p>
             <h2>{title}</h2>
-            <Link href="#">Read story <ArrowUpRight aria-hidden="true" /></Link>
+            <Link href={`/club/${slug(title)}`}>Read story <ArrowUpRight aria-hidden="true" /></Link>
           </article>
         ))}
       </section>

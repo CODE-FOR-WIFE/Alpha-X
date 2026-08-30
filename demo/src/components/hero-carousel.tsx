@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowDown } from 'lucide-react'
+import { ArrowDown, Phone } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react'
  * รูปทั้ง 3 gen จาก gpt-image-2 ผ่าน gen-hero-images.mjs ที่ root — art direction ล็อกให้เป็นชุดเดียวกัน
  * subject ถูกสั่งให้อยู่ขวาของเฟรม เพราะ .hero__shade ทับซ้ายมือไว้ที่ opacity 98% ให้ headline อ่านออก
  */
-// 3 ผลิตภัณฑ์จริงตาม alphaxclub.com — Vehicle / Motorcycle / Marine Financing
+// 5 สินเชื่อตาม sitemap หน้า 02 Our Products — Car / Yacht-River Boat / Aircraft / Property / Gold
+// (Big Bike ที่เคยอยู่ตรงนี้ไม่มีใน sitemap ของลูกค้า เอาออกแล้ว)
 const slides = [
   {
     category: 'Vehicle Financing',
@@ -25,21 +26,8 @@ const slides = [
     ),
   },
   {
-    category: 'Motorcycle Financing',
-    product: 'Big Bike',
-    image: '/assets/hero-bigbike.jpg',
-    lede: 'Financing built for the machines that turn an ordinary road into the reason you left the house at all.',
-    title: (
-      <>
-        Freedom in
-        <br />
-        <em>Motion</em>
-      </>
-    ),
-  },
-  {
     category: 'Marine Financing',
-    product: 'Yacht / Riverboat',
+    product: 'Yacht / River Boat',
     image: '/assets/hero-marine.jpg',
     lede: 'Specialist structures for yachts and riverboats, arranged with the discretion a vessel of this order deserves.',
     title: (
@@ -47,6 +35,45 @@ const slides = [
         Beyond the
         <br />
         <em>Horizon</em>
+      </>
+    ),
+  },
+  {
+    category: 'Aviation Financing',
+    product: 'Aircraft',
+    image: '/assets/hero-aircraft.jpg',
+    lede: 'Private aviation financed for owners who measure distance in hours saved rather than miles travelled.',
+    title: (
+      <>
+        Time, on
+        <br />
+        <em>Your Terms</em>
+      </>
+    ),
+  },
+  {
+    category: 'Property Financing',
+    product: 'Luxury Property',
+    image: '/assets/hero-property.jpg',
+    lede: 'Residences and landmark addresses held as part of a wider portfolio, structured without disturbing the rest of it.',
+    title: (
+      <>
+        Address as
+        <br />
+        <em>Legacy</em>
+      </>
+    ),
+  },
+  {
+    category: 'Gold-backed Finance',
+    product: 'Gold-backed Finance',
+    image: '/assets/hero-gold.jpg',
+    lede: 'Liquidity released against gold you already hold—without giving up the position you took it for.',
+    title: (
+      <>
+        Liquidity,
+        <br />
+        <em>Unbroken</em>
       </>
     ),
   },
@@ -90,6 +117,18 @@ export function HeroCarousel() {
         <div className="hero__slide" key={index}>
           <h1>{active.title}</h1>
           <p className="hero__lede">{active.lede}</p>
+          {/* CTA คู่ตาม sitemap หน้า Home: Discover More ทอดสายตาลง Expertise · Contact Us ต่อสายตรง
+              ประโยค "Beyond imagination. Beyond lifestyle." ที่ sitemap อยากได้ วางเป็นบรรทัดนำเหนือปุ่ม
+              ไม่ยัดลงในปุ่ม — ปุ่มยาวเป็นประโยคอ่านยากและกดยากบนมือถือ */}
+          <p className="hero__cta-line">Beyond imagination. Beyond lifestyle.</p>
+          <div className="hero__cta">
+            <a className="button" href="#expertise">
+              Discover more <ArrowDown aria-hidden="true" />
+            </a>
+            <a className="button button--outline" href="tel:+6620095200">
+              <Phone aria-hidden="true" /> Contact us
+            </a>
+          </div>
         </div>
         {/* ไม่ใช้ role=tablist — ไม่มี tabpanel จริง ARIA ผิดแย่กว่าไม่ใส่ ปุ่มธรรมดา + aria-current พอ */}
         <div aria-label="Choose a featured story" className="hero__pager" role="group">

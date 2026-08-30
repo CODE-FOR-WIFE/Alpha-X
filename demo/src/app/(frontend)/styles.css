@@ -122,6 +122,9 @@ p { font-size: 17px; line-height: 1.7; }
 @keyframes hero-slide-in { from { opacity: 0; transform: translateY(18px); } }
 /* pagination ใช้เลข 01/02/03 แบบเดียวกับ expertise cards / values list — เส้นเปล่า 3 เส้นไม่มี anchor
    ให้อ่าน เลขทำให้รู้ทันทีว่ามีกี่สไลด์และอยู่ใบไหน ส่วนเส้นใต้เลขเป็นทั้ง indicator และตัวนับเวลา */
+/* CTA คู่ในฮีโร่ — ปุ่มหลักครีม (ไม่ใช่แดง: แดงเป็นเครื่องหมาย ไม่ใช่พื้น interactive) */
+.hero__cta-line { margin: 30px 0 14px; color: var(--cream); font-size: 12px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 14px; }
 .hero__pager { margin-top: 48px; }
 .hero__pager-label { margin: 0 0 14px; color: var(--cream); font-size: 12px; font-weight: 300; letter-spacing: .22em; text-transform: uppercase; }
 .hero__pager-row { display: flex; gap: 30px; margin-left: -2px; }
@@ -141,13 +144,18 @@ p { font-size: 17px; line-height: 1.7; }
 .split-heading { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .55fr); gap: clamp(42px, 9vw, 132px); align-items: end; padding: clamp(42px, 6vw, 74px) 0 clamp(60px, 8vw, 104px); }
 .split-heading .eyebrow { margin-bottom: 22px; }
 .split-heading > p { margin-bottom: 0; color: var(--muted-light); }
+.split-heading > div:last-child p { color: var(--muted-light); }
+.split-heading__link { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding-bottom: 5px; border-bottom: 1px solid; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+.split-heading__link svg { width: 15px; }
 .expertise-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.3vw, 34px); }
 .expertise-card__image { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #ddd; }
 .expertise-card__image img { object-fit: cover; filter: grayscale(1) contrast(1.08); transition: filter .5s, transform .7s; }
 .expertise-card:hover img { filter: none; transform: scale(1.025); }
-.expertise-card__content { padding-top: 28px; }
+.expertise-card { display: flex; flex-direction: column; }
+.expertise-card__content { display: flex; flex: 1; flex-direction: column; padding-top: 28px; }
+.expertise-card__content a { margin-top: auto; align-self: flex-start; }
 .expertise-card__content h3 { margin-top: 15px; }
-.expertise-card__content > p:not(.eyebrow) { min-height: 88px; color: var(--muted-light); }
+.expertise-card__content > p:not(.eyebrow) { margin-bottom: 26px; color: var(--muted-light); }
 .expertise-card__content a, .insight-card a, .club-story a { display: inline-flex; align-items: center; gap: 10px; padding-bottom: 5px; border-bottom: 1px solid; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
 .expertise-card__content a svg, .insight-card a svg, .club-story a svg { width: 15px; }
 .film { padding: clamp(28px, 4vw, 58px) 0; }
@@ -169,7 +177,7 @@ p { font-size: 17px; line-height: 1.7; }
 .lightbox__bar { display: flex; justify-content: flex-end; margin-bottom: 14px; }
 .lightbox__bar button { display: grid; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; place-items: center; }
 .lightbox__bar svg { width: 24px; }
-.lightbox video { display: block; width: 100%; max-height: 78vh; aspect-ratio: 16 / 9; background: #000; object-fit: contain; }
+.lightbox iframe { display: block; width: 100%; max-height: 78vh; aspect-ratio: 16 / 9; border: 0; background: #000; }
 .values__grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: clamp(42px, 7vw, 96px); }
 .values__grid::before { content: ''; grid-column: 2; grid-row: 1; background: var(--line-light); }
 .values__statement { grid-column: 1; grid-row: 1; }
@@ -184,10 +192,10 @@ p { font-size: 17px; line-height: 1.7; }
 .values__list article p { margin-bottom: 0; color: var(--muted-light); }
 .values__list .button { align-self: flex-start; margin-top: 38px; background: var(--black); color: white; }
 .insights .split-heading { padding-bottom: 72px; }
-.insights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 56px); }
+.insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 2.6vw, 40px); }
 .insight-card__image { position: relative; aspect-ratio: 16 / 10; margin-bottom: 28px; overflow: hidden; }
 .insight-card__image img { object-fit: cover; filter: grayscale(.65); }
-.insight-card h3 { max-width: 560px; margin-top: 17px; font-family: 'Playfair Display', serif; font-size: clamp(32px, 3vw, 48px); }
+.insight-card h3 { max-width: 560px; margin-top: 17px; font-family: 'Playfair Display', serif; font-size: clamp(26px, 2.1vw, 34px); }
 .insight-card > p:not(.eyebrow) { color: var(--muted-light); }
 /* ── Showcase (ไดคัท) ───────────────────────────────────────────────────
    ถอด composition จาก hero ของ preview/: หัวข้อกลาง + คำโปรยกลาง maxw 768
@@ -235,6 +243,33 @@ p { font-size: 17px; line-height: 1.7; }
 .footer__social svg { width: 19px; height: 19px; }
 .footer__bottom { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line-dark); padding-top: 24px; color: var(--muted-dark); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 
+/* รายการสินเชื่อ 5 อย่างใต้ภาพไดคัท — sitemap ให้เล่าเป็น solution ไม่ใช่ product list
+   จึงเป็นแถวข้อความเรียบ ๆ ไม่ใช่การ์ดมีกรอบ ให้สายตาไปที่ภาพก่อน */
+.product-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(20px, 2.4vw, 40px); margin-top: clamp(56px, 7vw, 96px); text-align: left; }
+.product-list article { padding-top: 22px; border-top: 1px solid var(--line-light); }
+.product-list h3 { margin-bottom: 10px; font-size: clamp(20px, 1.5vw, 24px); }
+.product-list p { margin-bottom: 0; color: var(--muted-light); font-size: 15px; line-height: 1.6; }
+
+/* ── 404 ────────────────────────────────────────────────────────────────
+   หน้าเดียวในเดโมที่ตั้งใจให้ตัว X เป็นตัวเอก — วางกลางหลังข้อความ ไม่ใช่ลายเซ็นมุมจอ
+   ใช้ token ชุดเดียวกับหน้าอื่น ไม่มีสีใหม่
+   ───────────────────────────────────────────────────────────────────── */
+.notfound { position: relative; display: grid; min-height: 100svh; overflow: hidden; align-items: center; padding: 160px 0 90px; }
+.notfound__inner { position: relative; z-index: 1; }
+.notfound h1 { max-width: 900px; margin: 22px 0 26px; font-size: clamp(52px, 7vw, 104px); letter-spacing: -.055em; line-height: .9; }
+.notfound h1 em { color: var(--red); font-weight: 400; }
+.notfound__lede { max-width: 560px; color: var(--muted-dark); font-size: clamp(16px, 1.3vw, 19px); }
+.notfound__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.notfound__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: clamp(64px, 8vw, 104px); padding-top: 28px; border-top: 1px solid var(--line-dark); }
+.notfound__list > .eyebrow { grid-column: 1 / -1; margin-bottom: 4px; }
+.notfound__list h2 { margin-bottom: 8px; font-family: 'ALPHA X', sans-serif; font-size: 19px; letter-spacing: 0; }
+.notfound__list p { margin-bottom: 0; color: var(--muted-dark); font-size: 14px; line-height: 1.6; }
+/* ตัว X ขนาดใหญ่ — เส้นแดงยาวพาดทั้งจอ + ขาขาวสั้นคร่อม เหมือน .x-mark แต่สเกลหน้า */
+.notfound__mark { position: absolute; z-index: 0; top: -8%; right: 8%; width: clamp(220px, 26vw, 400px); aspect-ratio: 300 / 455; pointer-events: none; }
+.notfound__mark::before, .notfound__mark::after { content: ''; position: absolute; top: 0; left: 50%; width: 3px; transform-origin: top center; }
+.notfound__mark::before { height: 190%; transform: rotate(31.3deg); background: linear-gradient(var(--red), color-mix(in srgb, var(--red) 15%, transparent)); }
+.notfound__mark::after { height: 20%; transform: translate(calc(clamp(220px, 26vw, 400px) * -.155), calc(clamp(220px, 26vw, 400px) * .017)) rotate(-33.7deg); background: white; }
+
 /* ── X gimmick ──────────────────────────────────────────────────────────
    ถอดจาก alphaxclub.com (information-bg.png + clip-path ของ section ถัดไป):
    เส้นแดงแบรนด์เอียง 31.3° + ขาขาวสั้นตัดเป็นตัว X ตรงหัวเส้น วางคร่อมรอยต่อ section
@@ -254,7 +289,7 @@ p { font-size: 17px; line-height: 1.7; }
 .x-mark::before { height: var(--x-len); transform: rotate(31.3deg); background: var(--red); }
 /* ขาขาวเอียงสวนทาง คร่อมขาแดงที่ระยะ 10% จากหัว เหมือน png ต้นฉบับ
    ระยะ translate มาจากเรขาฯ ตรงๆ: จุดกึ่งกลางขาขาวต้องตกบนเส้นแดงพอดี */
-.x-mark::after { height: calc(var(--x-len) * .18); transform: translate(calc(var(--x-len) * -.102), calc(var(--x-len) * .011)) rotate(-33.7deg); background: white; }
+.x-mark::after { height: calc(var(--x-len) * .32); transform: translate(calc(var(--x-len) * -.172), calc(var(--x-len) * .004)) rotate(-33.7deg); background: white; }
 
 .club-page { min-height: 100vh; padding-top: 92px; }
 .club-hero { padding: clamp(80px, 10vw, 146px) 0; border-bottom: 1px solid var(--line-light); }
@@ -273,12 +308,14 @@ p { font-size: 17px; line-height: 1.7; }
   :root { --shell: min(100% - 40px, 900px); }
   .nav-cta { display: none; }
   .expertise-grid { grid-template-columns: 1fr; gap: 70px; }
+  .product-list { grid-template-columns: repeat(2, 1fr); gap: 32px; }
   .expertise-card { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
   .expertise-card__image { aspect-ratio: 4 / 3; }
   .values__grid { grid-template-columns: 1fr; }
   .values__grid::before { display: none; }
   .values__statement, .values__list { grid-column: 1; grid-row: auto; }
   .values__list { margin-top: 70px; }
+  .insights-grid { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
 }
@@ -297,6 +334,8 @@ p { font-size: 17px; line-height: 1.7; }
   .hero__visual img { object-position: 64% center; }
   .hero__shade { background: linear-gradient(0deg, rgb(5 5 7 / 96%) 4%, rgb(5 5 7 / 48%) 70%, rgb(5 5 7 / 45%)); }
   .hero__scroll { bottom: 24px; }
+  .hero__cta-line { margin: 24px 0 12px; font-size: 11px; letter-spacing: .16em; }
+  .hero__cta .button { flex: 1 1 100%; }
   .hero__pager { margin-top: 32px; }
   .hero__pager-row { gap: 22px; }
   .hero__pager-track { width: 44px; }
@@ -307,6 +346,7 @@ p { font-size: 17px; line-height: 1.7; }
   .film__play svg { width: 56px; }
   .values__image { margin-top: 56px; }
   .insights-grid { grid-template-columns: 1fr; gap: 70px; }
+  .product-list { grid-template-columns: 1fr; gap: 28px; }
   /* จอแคบ: ดันหัวไปชิดขวาแล้วย่อเส้น ให้ปลายจบเหนือ headline */
   .values { --x-head: 88vw; --x-rise: 74px; --x-len: 190px; }
   .closing__card { min-height: 660px; }
@@ -316,6 +356,10 @@ p { font-size: 17px; line-height: 1.7; }
   .club-grid { grid-template-columns: 1fr; }
   .club-story--lead { grid-column: auto; }
   .club-story--lead .club-story__image { aspect-ratio: 4 / 5; }
+  .notfound { padding: 120px 0 70px; }
+  .notfound__list { grid-template-columns: 1fr; gap: 22px; }
+  .notfound__actions .button { flex: 1 1 100%; }
+  .notfound__mark { right: -6%; top: auto; bottom: 4%; }
   .footer__bottom { gap: 14px; flex-direction: column; }
 }
 
