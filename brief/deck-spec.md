@@ -59,7 +59,7 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 | 09 | Content Strategy | Cadence + SEO cards · Collector / Explorer / Connoisseur pillars |
 | 10 | Tech & Security | Next.js → Payload → PostgreSQL → Azure · two checklists · closing hook |
 | 11 | Timeline & Investment | 5 phases with gates · THB 470,000 / 30,000 per month / 1 month warranty |
-| 12 | Live Demo | Centred close, QR slot, mirrored X motif |
+| 12 | Live Demo | Centred close, QR slot, X motif · **copy states only what the demo actually does** — video lightbox has no file yet, so “every interaction is live” was removed |
 
 ## Still awaiting
 | Slide | What | From |
@@ -72,3 +72,4 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 | 08 | Two demo screenshots | after Vercel deploy |
 | 09 | Three pillar images | image gen |
 | 12 | Live URL + QR | after deploy |
+| — | `demo/public/assets/alpha-x-story.mp4` — video lightbox points at it but the file is missing | เจนหรือหาไฟล์วิดีโอ |

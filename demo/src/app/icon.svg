@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- favicon ใช้องศาเดียวกับ motif บนเว็บ: ขาแดง 31.3° · ขาสั้น 33.7° จากแนวตั้ง
+       (ค่าที่ถอดจาก information-bg.png ต้นฉบับของ alphaxclub) เทา #9A968C อ่านออกทั้งพื้นขาวและดำ -->
+  <path d="M21 11 L45 47" stroke="#9A968C" stroke-width="8" stroke-linecap="square"/>
+  <path d="M50 4 L14 62" stroke="#E4002D" stroke-width="8" stroke-linecap="square"/>
+</svg>

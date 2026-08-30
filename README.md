@@ -25,7 +25,7 @@ python3 check-contrast.py               # ต้องขึ้น ALL PASS ก�
 ```
 
 Deck: ทำใน [Figma](https://www.figma.com/design/5DZ7FTf2wXT1RNbgFVSfVU/AlphaX) (page `Deck 2026`) — ระบบและเนื้อหาอยู่ที่ `brief/deck-spec.md`
-ส่งลูกค้าผ่าน [Google Slides](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit): `scripts/slides-sync.gs` (Apps Script) ดึงรูปจาก Figma API มาวางในสไลด์ให้เอง — กด Run หรือปล่อย trigger รายชั่วโมง (วิธีติดตั้งอยู่ในหัวไฟล์)
+ส่งลูกค้าผ่าน [Google Slides](https://docs.google.com/presentation/d/1EDWQEQJYcsSbU3DSlH0KT0r8_xU3mAfaX52B2JFvlSk/edit): `scripts/slides-sync.gs` (Apps Script) ดึงรูปจาก Figma API มาวางในสไลด์ — สั่งจากเมนู **Alpha X → Sync deck from Figma** ในตัว Slides เอง ไม่มี trigger อัตโนมัติ (กันไม่ให้สไลด์ถูกเขียนทับกลางพรีเซนต์)
 
 ## Design system
 

@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button'
 
 const links = [
   { href: '/', label: 'Home' },
-  { href: '/#expertise', label: 'Expertise' },
-  { href: '/#about', label: 'About' },
+  { href: '/about', label: 'About Us' },
+  { href: '/products', label: 'Our Products' },
   { href: '/club', label: 'Alpha X Club' },
-  { href: '/#contact', label: 'Contact' },
+  { href: '/contact', label: 'Contact & Inquiry' },
 ]
 
 export function SiteMenu() {

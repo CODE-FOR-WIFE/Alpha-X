@@ -1,25 +1,28 @@
 'use client'
 
 import { CirclePlay, X } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+
+const YOUTUBE_ID = 'urcyojOfou0'
 
 /**
  * ponytail: <dialog showModal()> ของ browser เอง — ได้ Esc ปิด, focus trap, inert หลังฉาก
  * และ ::backdrop มาให้ฟรี ไม่ต้องลง modal library หรือเขียน keydown handler เอง
+ *
+ * วิดีโอเป็น YouTube embed: mount iframe เฉพาะตอนเปิด แล้ว unmount ตอนปิด
+ * — วิธีนี้ทำให้ปิดแล้ววิดีโอหยุดเองโดยไม่ต้องยิง postMessage คุย YouTube API
+ *   และหน้า Home ไม่ต้องโหลดสคริปต์ของ YouTube เลยจนกว่าจะมีคนกดเล่น
  */
 export function VideoLightbox() {
   const dialog = useRef<HTMLDialogElement>(null)
-  const video = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(false)
 
   // ไม่พึ่ง event 'close' — เบราว์เซอร์ที่เทสต์ไม่ยิงให้ (แต่ 'cancel' ตอนกด Esc ยิงปกติ)
   // เลยรวม cleanup ไว้ที่ฟังก์ชันเดียวแล้วเรียกจากทุกทางที่ปิดได้แทน
   const close = () => {
     dialog.current?.close()
     document.body.style.overflow = ''
-    const v = video.current
-    if (!v) return
-    v.pause()
-    v.currentTime = 0
+    setPlaying(false)
   }
 
   return (
@@ -30,6 +33,7 @@ export function VideoLightbox() {
         onClick={() => {
           dialog.current?.showModal()
           document.body.style.overflow = 'hidden'
+          setPlaying(true)
         }}
         type="button"
       >
@@ -50,9 +54,14 @@ export function VideoLightbox() {
             <X aria-hidden="true" />
           </button>
         </div>
-        <video controls poster="/assets/hero-automotive.jpg" preload="none" ref={video}>
-          <source src="/assets/alpha-x-story.mp4" type="video/mp4" />
-        </video>
+        {playing && (
+          <iframe
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&rel=0&modestbranding=1`}
+            title="The ALPHA X story"
+          />
+        )}
       </dialog>
     </>
   )

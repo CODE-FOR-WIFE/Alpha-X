@@ -36,7 +36,8 @@ const STORY = [
   'Absolutely no text, no lettering, no logos, no watermarks, no visible branding.',
 ].join(' ')
 
-// 3 หมวดตามผลิตภัณฑ์จริงบน alphaxclub.com: Luxury Car / Bigbike / Yacht-Riverboat
+// 5 หมวดตาม sitemap หน้า 02 Our Products — Car / Yacht-River Boat / Aircraft / Property / Gold
+// (bigbike เก็บไว้เฉย ๆ ไม่มีใน sitemap แล้ว ไม่ได้ใช้ใน hero)
 const SUBJECTS = {
   automotive: [HERO,
     'A low-slung modern luxury sports coupe seen from a low three-quarter rear angle, sculpted body panels catching a thin red light line along the roof and shoulder.'],
@@ -44,6 +45,12 @@ const SUBJECTS = {
     'A premium large-displacement sport touring motorcycle standing at a three-quarter front angle, fuel tank and fairing edged by a thin red light line, wheel rim and exhaust catching faint highlights.'],
   marine: [HERO,
     'A sleek dark superyacht cutting through still black water at night, its bow and superstructure edged by a thin red light line, empty sky with no aircraft.'],
+  aircraft: [HERO,
+    'A private business jet parked on a dark wet apron at night seen from a low three-quarter front angle, fuselage and winglet edged by a thin red light line, airstair down, no ground crew and no other aircraft.'],
+  property: [HERO,
+    'A modern hillside villa at night seen from outside across a still black infinity pool, one warm interior glow behind full-height glass, roofline edged by a thin red light line, no people.'],
+  gold: [HERO,
+    'A precise stack of cast gold bullion bars on a dark polished stone surface, one thin red light line raking across the top bar, everything else falling into deep shadow, no text or stamps on the metal.'],
 
   // บทความ — ชื่อไฟล์ต้องตรงกับ key ใน stories/insights
   'story-collector': [STORY,
