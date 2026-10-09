@@ -4,7 +4,7 @@ import { ArrowDown, Phone } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * ponytail: วิดีโอไฟล์เดียว (public/assets/hero.mp4) ต่อ 5 ช็อตเรียงตาม slides ช็อตละ SLIDE วินาที
+ * ponytail: วิดีโอ (hero.mp4 desktop / hero-mobile.mp4 แนวตั้ง — render ด้วย scripts/build-hero-video.sh) ต่อ 5 ช็อตเรียงตาม slides ช็อตละ SLIDE วินาที
  * crossfade อบในไฟล์แล้ว — ข้อความอ่าน index จาก currentTime ไม่มี timer แยก เลยไม่มีทางหลุดจังหวะกับภาพ
  * ความมืดฝั่งซ้ายมาจาก .hero__shade ทับอยู่ ไม่ได้อบลงวิดีโอ — ปรับใน CSS ได้โดยไม่ต้อง render ใหม่
  * ฟุตเทจ: Car/Aircraft/Property จาก Magnific Stock, Yacht/Gold จาก Mixkit (free license) — ไฟล์ดิบอยู่ footage/raw (gitignored)
@@ -110,8 +110,12 @@ export function HeroCarousel() {
           poster="/assets/hero-poster.jpg"
           preload="auto"
           ref={video}
-          src="/assets/hero.mp4"
-        />
+        >
+          {/* มือถือได้ไฟล์ตัดแนวตั้งแยก (~6MB) — คมกว่าให้ CSS crop จากไฟล์ 16:9 และเบากว่าครึ่งหนึ่ง
+              เบราว์เซอร์เลือก source ตอนโหลดครั้งเดียว หมุน/ย่อจอทีหลังไม่สลับไฟล์ ซึ่งไม่เป็นไรเพราะ cover ทั้งคู่ */}
+          <source media="(max-width: 767px)" src="/assets/hero-mobile.mp4" type="video/mp4" />
+          <source src="/assets/hero.mp4" type="video/mp4" />
+        </video>
         <div className="hero__shade" />
       </div>
 

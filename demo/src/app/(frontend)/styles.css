@@ -361,7 +361,7 @@ p { font-size: 17px; line-height: 1.7; }
   .hero { min-height: 820px; align-items: end; }
   .hero__copy { padding: 170px 0 126px; }
   .hero h1 { font-size: clamp(54px, 16vw, 84px); }
-  .hero__visual video { object-position: 60% center; }
+  .hero__visual video { object-position: center; } /* ไฟล์มือถือจัดเฟรมมาแล้วตอน render */
   .hero__shade { background: linear-gradient(0deg, rgb(5 5 7 / 96%) 4%, rgb(5 5 7 / 48%) 70%, rgb(5 5 7 / 45%)); }
   .hero__scroll { bottom: 24px; }
   .hero__cta-line { margin: 24px 0 12px; font-size: 11px; letter-spacing: .16em; }
