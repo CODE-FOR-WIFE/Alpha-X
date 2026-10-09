@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S11 Timeline &amp; Investment</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="slide.css">
+<style>
+  /* แถว 8 สัปดาห์ */
+  .weeks { padding: 32px 36px 34px; }
+  .weeks ol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px; margin: 26px 0 0; padding: 0; list-style: none; }
+  .weeks li { padding-top: 22px; border-top: 1px solid color-mix(in oklch, var(--ax-white) 18%, transparent); }
+  .weeks li.go { border-top: 2px solid var(--accent); }
+  .weeks .wk { font-size: 17px; letter-spacing: .26em; color: var(--text-muted); }
+  .weeks .go .wk { color: var(--accent); font-weight: 400; }
+  .weeks h3 { margin: 12px 0 10px; font-size: 26px; font-weight: 400; }
+  .weeks .note { font-size: 18px; color: var(--text-muted); }
+
+  /* แถวราคา — เพิ่มคอลัมน์ Scope & assumptions (RFP: ลูกค้าต้องเห็นว่าอะไรอยู่นอกราคา) */
+  .money { display: grid; grid-template-columns: 1.15fr .8fr 1.25fr; margin-top: 22px; }
+  .money > div { padding: 34px 36px; }
+  .money > div + div { border-left: 1px solid color-mix(in oklch, var(--ax-white) 12%, transparent); }
+  .price { margin: 22px 0 8px; font-family: "Playfair Display", serif; font-size: 84px; font-weight: 400; line-height: 1; }
+  .sub { margin: 0; font-size: 18px; color: var(--text-muted); }
+  .kv + .kv { margin-top: 26px; }
+  .kv strong { display: block; margin: 8px 0 4px; font-size: 26px; font-weight: 300; }
+  .scope ul { margin: 18px 0 0; padding: 0; list-style: none; }
+  .scope li { position: relative; padding-left: 26px; font-size: 19px; line-height: 1.45; color: var(--text-muted); }
+  .scope li + li { margin-top: 12px; }
+  .scope li::before { content: ""; position: absolute; left: 0; top: .72em; width: 12px; height: 1px; background: var(--accent); }
+  .scope b { font-weight: 400; color: var(--text); }
+  .foot { margin-top: 30px; font-size: 21px; color: var(--text); }
+  .foot::before { content: ""; display: inline-block; width: 28px; height: 2px; margin-right: 14px; vertical-align: middle; background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="eyebrow"><span>10 · TIMELINE &amp; INVESTMENT</span><span>ALPHA X</span></div>
+  <h1>Eight weeks.<br>Something to see every one.</h1>
+  <div class="rule"></div>
+
+  <section class="box weeks">
+    <p class="label">Eight weeks, five gates</p>
+    <ol>
+      <li><div class="wk">WK 1</div><h3>Wireframe &amp; UX flow</h3><div class="note">gate: sign-off</div></li>
+      <li><div class="wk">WK 2</div><h3>UI design + components</h3><div class="note">gate: sign-off</div></li>
+      <li><div class="wk">WK 3–5</div><h3>Development + CMS</h3><div class="note">staging reviewed weekly</div></li>
+      <li><div class="wk">WK 6–7</div><h3>UAT · VA · performance</h3><div class="note">your team tests</div></li>
+      <li class="go"><div class="wk">WK 8</div><h3>Go-live</h3><div class="note">DNS · SSL · GA4 · 301</div></li>
+    </ol>
+  </section>
+
+  <section class="box money">
+    <div>
+      <p class="label">Development — fixed price</p>
+      <p class="price">THB 470,000</p>
+      <p class="sub">Design · development · CMS · VA scan · one month warranty</p>
+    </div>
+    <div>
+      <div class="kv"><p class="label">Maintenance</p><strong>THB 30,000 / month</strong><p class="sub">optional · one-year MA</p></div>
+      <div class="kv"><p class="label">Warranty</p><strong>1 month</strong><p class="sub">included after go-live</p></div>
+    </div>
+    <div class="scope">
+      <p class="label">Scope &amp; assumptions</p>
+      <ul>
+        <li><b>Image direction</b> proposed by us — moodboard, shot list and stock picks for your approval</li>
+        <li><b>Media cost</b> — licensed stock footage, photography and shoots billed at cost to Alpha X</li>
+        <li><b>Content</b> supplied by the Alpha X team; we move it into the new&nbsp;CMS</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="foot">Fixed price, fixed scope. Each gate is a sign-off — nothing moves forward without your approval.</p>
+</div>
+<script src="fit.js"></script>
+</body>
+</html>

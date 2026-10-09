@@ -202,6 +202,40 @@ function syncDeckFromMenu() {
   ui.alert('เสร็จแล้ว', 'อัปเดต ' + report.length + ' สไลด์', ui.ButtonSet.OK);
 }
 
+/**
+ * ทางเข้าแบบ Web App — ให้ sync จากนอก Slides ได้ (เช่น curl จากเครื่อง / ให้ Claude สั่ง)
+ * โดยไม่ต้องมีคนเปิดไฟล์กดเมนู
+ *
+ * ติดตั้ง (ครั้งเดียว):
+ *  1. Script Properties → Add → key `SYNC_KEY` = สตริงสุ่มยาว ๆ (เป็นรหัสผ่านของ URL นี้)
+ *  2. Deploy → New deployment → Web app · Execute as: Me · Who has access: Anyone
+ *  3. เก็บ URL ที่ได้ไว้ เรียกด้วย  <URL>?key=<SYNC_KEY>
+ *     ผลลัพธ์เป็น JSON รายชื่อสไลด์ที่อัปเดต
+ *
+ * "Anyone" จำเป็นเพราะ curl ไม่มี cookie Google — กันคนนอกด้วย SYNC_KEY แทน
+ * ไม่มี key หรือ key ผิด = ไม่ทำอะไรเลย · แก้โค้ดทีหลังต้อง Deploy → Manage deployments → Edit → New version
+ * ไม่ถามยืนยันแบบเมนู — อย่าเรียกระหว่างกำลังพรีเซนต์
+ */
+function doGet(e) {
+  var key = PropertiesService.getScriptProperties().getProperty('SYNC_KEY');
+  var out = function (obj) {
+    return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+  };
+  if (!key || !e || !e.parameter || e.parameter.key !== key) return out({ ok: false, error: 'unauthorized' });
+
+  // กันสองคำสั่งชนกัน — sync ลบ element ทุกสไลด์ ถ้ารันซ้อนจะได้สไลด์ว่าง/ซ้ำ
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(1000)) return out({ ok: false, error: 'sync already running' });
+  try {
+    var report = syncDeck();
+    return out({ ok: true, count: report.length, slides: report });
+  } catch (err) {
+    return out({ ok: false, error: String(err) });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 /** เผื่อเคยตั้ง trigger รายชั่วโมงไว้ก่อนหน้า — เรียกครั้งเดียวเพื่อล้างทิ้ง */
 function removeAutoTriggers() {
   var removed = 0;

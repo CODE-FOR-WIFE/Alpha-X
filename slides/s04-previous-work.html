@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S04 Previous Work</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="slide.css">
+<style>
+  /* ponytail: โครงรอรูป — การ์ด 3×2 มีแค่หัวข้อ พอได้รูปผลงานจริงค่อยใส่ background-image ที่ .shot */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .card { display: flex; flex-direction: column; overflow: hidden; }
+  .shot {
+    display: grid; place-items: center; height: 236px; /* 2 แถวต้องพอดี 1080 — ได้ราว 2.3:1 ครอปรูปผลงานแนวกว้าง */
+    background: repeating-linear-gradient(135deg, color-mix(in oklch, var(--ax-white) 4%, transparent) 0 14px, transparent 14px 28px);
+    border-bottom: 1px solid color-mix(in oklch, var(--ax-white) 12%, transparent);
+    font-size: 17px; letter-spacing: .3em; color: var(--ax-text-3);
+  }
+  .meta { padding: 20px 24px 22px; }
+  .meta h3 { margin: 0 0 6px; font-size: 26px; font-weight: 400; }
+  .meta p { margin: 0; font-size: 18px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="eyebrow"><span>03 · PREVIOUS WORK</span><span>ALPHA X</span></div>
+  <h1>Previous work</h1>
+  <div class="rule"></div>
+
+  <div class="grid">
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+    <article class="box card"><div class="shot">IMAGE</div><div class="meta"><h3>Project name</h3><p>Client · category · year</p></div></article>
+  </div>
+</div>
+<script src="fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S03 Our Team</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="slide.css">
+<style>
+  /* S02 ใช้ "Technology built around your problems" + 3 บริการไปแล้ว — S03 เลยเล่าเฉพาะ
+     ความเชื่อ + ทีม ไม่ซ้ำรายการบริการ */
+  .body { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: stretch; margin-top: 56px; }
+  .belief { display: flex; flex-direction: column; justify-content: center; }
+  .belief blockquote { margin: 26px 0 0; font-family: "Playfair Display", serif; font-size: 54px; line-height: 1.22; }
+  .belief blockquote em { color: var(--accent); }
+  .belief p.sub { margin: 30px 0 0; max-width: 760px; font-size: 24px; line-height: 1.55; color: var(--text-muted); }
+
+  .team { display: flex; flex-direction: column; min-height: 470px; box-sizing: border-box; padding: 48px 50px; }
+  .team h2 { margin: 22px 0 18px; font-size: 40px; font-weight: 400; line-height: 1.2; }
+  .team p { margin: 0; font-size: 23px; line-height: 1.6; color: var(--text-muted); }
+  .team b { font-weight: 400; color: var(--text); }
+
+  /* ขนาดองค์กรที่รับ — เส้นสเกลเล็ก ๆ บอกช่วงลูกค้าให้เห็นในแวบเดียว */
+  .scale { margin-top: auto; padding-top: 40px; }
+  .scale-line { position: relative; height: 2px; margin: 22px 0 16px; background: linear-gradient(90deg, color-mix(in oklch, var(--ax-white) 30%, transparent), var(--accent)); }
+  .scale-line::before, .scale-line::after { content: ""; position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%; }
+  .scale-line::before { left: 0; background: var(--ax-text-2); }
+  .scale-line::after { right: 0; background: var(--accent); }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 20px; letter-spacing: .08em; }
+
+  /* วางชิดล่างเหมือนแถว identity ของ S02 */
+  .identity { position: absolute; left: 108px; right: 108px; bottom: 64px; display: flex; justify-content: space-between; padding-top: 22px; border-top: 1px solid var(--line); font-size: 19px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="eyebrow"><span>02 · WHO WE ARE</span><span>ALPHA X</span></div>
+  <h1>More than a system that works.</h1>
+  <div class="rule"></div>
+
+  <div class="body">
+    <section class="belief">
+      <p class="label">What we believe</p>
+      <blockquote>Great technology <em>understands</em> your challenges — and creates real value for your business.</blockquote>
+      <p class="sub">That is why every engagement starts with the problem, not the&nbsp;platform.</p>
+    </section>
+
+    <section class="box team">
+      <p class="label">The team</p>
+      <h2>Founded by highly experienced software engineers</h2>
+      <p>CFW-Intelligent builds <b>Custom Applications</b>, <b>Software Solutions</b> and <b>AI Solutions</b> tailored to the unique needs of each organisation.</p>
+      <div class="scale">
+        <p class="label">Who we build for</p>
+        <div class="scale-line"></div>
+        <div class="scale-ends"><span>Small businesses</span><span>Large enterprises</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="identity"><span>CFW-Intelligent · Code for Wife Co., Ltd. · Bangkok</span><span>Technology built around your problems.</span></div>
+</div>
+<script src="fit.js"></script>
+</body>
+</html>

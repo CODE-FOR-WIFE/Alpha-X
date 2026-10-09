@@ -1,0 +1,30 @@
+/* สไตล์กลางของสไลด์ร่างบน localhost (S03 / S04 / S11 …) — เดคจริงอยู่ Figma → sync Google Slides
+   ค่าสี/ฟอนต์มาจาก ../tokens.css ทั้งหมด */
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+.stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--fit, 1));
+  /* แสงสีจาง ๆ หลังกล่อง — กระจกต้องมีอะไรให้เบลอ ไม่งั้นเป็นแค่กล่องเทา */
+  background:
+    radial-gradient(38% 46% at 86% 34%, color-mix(in oklch, var(--ax-red) 34%, transparent), transparent 70%),
+    radial-gradient(42% 50% at 14% 88%, color-mix(in oklch, var(--ax-navy) 90%, transparent), transparent 70%),
+    radial-gradient(30% 36% at 52% 62%, color-mix(in oklch, var(--ax-gold) 12%, transparent), transparent 70%),
+    var(--ax-black);
+  color: var(--text); font-family: "ALPHA X", sans-serif; font-weight: 300;
+  box-sizing: border-box; padding: 88px 108px 0;
+}
+.eyebrow { display: flex; justify-content: space-between; align-items: center; font-size: 22px; letter-spacing: .32em; color: var(--text-muted); }
+.eyebrow span:first-child::before { content: ""; display: inline-block; width: 40px; height: 2px; margin-right: 18px; vertical-align: middle; background: var(--accent); }
+h1 { margin: 34px 0 0; font-size: 80px; font-weight: 300; line-height: 1.12; letter-spacing: -.01em; }
+.rule { height: 1px; margin: 30px 0 34px; background: linear-gradient(90deg, oklch(40% 0.12 23 / 70%), var(--line)); }
+.box {
+  /* glassmorphism: พื้นขาวโปร่ง 6% + เบลอ + ขอบบนสว่างกว่าเหมือนแสงตกกระทบ */
+  border: 1px solid color-mix(in oklch, var(--ax-white) 14%, transparent);
+  border-top-color: color-mix(in oklch, var(--ax-white) 26%, transparent);
+  border-radius: 18px;
+  background: linear-gradient(160deg, color-mix(in oklch, var(--ax-white) 9%, transparent), color-mix(in oklch, var(--ax-white) 3%, transparent));
+  backdrop-filter: blur(28px) saturate(140%);
+  box-shadow: 0 24px 60px color-mix(in oklch, var(--ax-black) 55%, transparent), inset 0 1px 0 color-mix(in oklch, var(--ax-white) 10%, transparent);
+}
+.label { margin: 0; font-size: 18px; letter-spacing: .3em; text-transform: uppercase; color: var(--text-muted); }
+
