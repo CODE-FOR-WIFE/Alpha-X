@@ -1,13 +1,13 @@
 'use client'
 
 import { ArrowDown, Phone } from 'lucide-react'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
- * ponytail: crossfade ธรรมดา ไม่ลง scroll-snap/embla — hero มี 3 สไลด์ตายตัว
- * รูปทั้ง 3 gen จาก gpt-image-2 ผ่าน gen-hero-images.mjs ที่ root — art direction ล็อกให้เป็นชุดเดียวกัน
- * subject ถูกสั่งให้อยู่ขวาของเฟรม เพราะ .hero__shade ทับซ้ายมือไว้ที่ opacity 98% ให้ headline อ่านออก
+ * ponytail: วิดีโอไฟล์เดียว (public/assets/hero.mp4) ต่อ 5 ช็อตเรียงตาม slides ช็อตละ SLIDE วินาที
+ * crossfade อบในไฟล์แล้ว — ข้อความอ่าน index จาก currentTime ไม่มี timer แยก เลยไม่มีทางหลุดจังหวะกับภาพ
+ * ความมืดฝั่งซ้ายมาจาก .hero__shade ทับอยู่ ไม่ได้อบลงวิดีโอ — ปรับใน CSS ได้โดยไม่ต้อง render ใหม่
+ * ฟุตเทจ: Car/Aircraft/Property จาก Magnific Stock, Yacht/Gold จาก Mixkit (free license) — ไฟล์ดิบอยู่ footage/raw (gitignored)
  */
 // 5 สินเชื่อตาม sitemap หน้า 02 Our Products — Car / Yacht-River Boat / Aircraft / Property / Gold
 // (Big Bike ที่เคยอยู่ตรงนี้ไม่มีใน sitemap ของลูกค้า เอาออกแล้ว)
@@ -15,7 +15,6 @@ const slides = [
   {
     category: 'Vehicle Financing',
     product: 'Luxury Car',
-    image: '/assets/hero-automotive.jpg',
     lede: 'Beyond wealth lies what moves you. We shape financial possibilities around the life, objects and experiences that matter most.',
     title: (
       <>
@@ -28,7 +27,6 @@ const slides = [
   {
     category: 'Marine Financing',
     product: 'Yacht / River Boat',
-    image: '/assets/hero-marine.jpg',
     lede: 'Specialist structures for yachts and riverboats, arranged with the discretion a vessel of this order deserves.',
     title: (
       <>
@@ -41,7 +39,6 @@ const slides = [
   {
     category: 'Aviation Financing',
     product: 'Aircraft',
-    image: '/assets/hero-aircraft.jpg',
     lede: 'Private aviation financed for owners who measure distance in hours saved rather than miles travelled.',
     title: (
       <>
@@ -54,7 +51,6 @@ const slides = [
   {
     category: 'Property Financing',
     product: 'Luxury Property',
-    image: '/assets/hero-property.jpg',
     lede: 'Residences and landmark addresses held as part of a wider portfolio, structured without disturbing the rest of it.',
     title: (
       <>
@@ -67,7 +63,6 @@ const slides = [
   {
     category: 'Gold-backed Finance',
     product: 'Gold-backed Finance',
-    image: '/assets/hero-gold.jpg',
     lede: 'Liquidity released against gold you already hold—without giving up the position you took it for.',
     title: (
       <>
@@ -79,35 +74,44 @@ const slides = [
   },
 ]
 
-const INTERVAL = 6500
+// ต้องตรงกับ offset ของ xfade ตอน render hero.mp4 (ช็อตละ 6.5 วิ, fade 1 วิ)
+const SLIDE = 6.5
+const INTERVAL = SLIDE * 1000
 
 export function HeroCarousel() {
   const [index, setIndex] = useState(0)
+  const video = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // เคารพ prefers-reduced-motion — ไม่เลื่อนเอง ให้ผู้ใช้กด dot แทน
+    // เคารพ prefers-reduced-motion — ไม่เล่นเอง ค้างที่ poster ให้ผู้ใช้กดเลขเลือกช็อตแทน
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), INTERVAL)
-    return () => clearInterval(id)
-  }, [index])
+    video.current?.play().catch(() => {})
+  }, [])
 
   const active = slides[index]
+
+  const goTo = (i: number) => {
+    // +1 ข้ามช่วง crossfade ไปลงภาพเต็มของช็อตนั้นเลย
+    if (video.current) video.current.currentTime = i * SLIDE + 1
+    setIndex(i)
+  }
 
   return (
     <section aria-label="Featured" aria-roledescription="carousel" className="hero section-dark">
       <div className="hero__visual" aria-hidden="true">
-        {slides.map((slide, i) => (
-          <Image
-            alt=""
-            className={i === index ? 'is-active' : undefined}
-            fill
-            key={slide.category}
-            priority={i === 0}
-            sizes="100vw"
-            src={slide.image}
-            style={{ objectPosition: '62% center' }}
-          />
-        ))}
+        <video
+          loop
+          muted
+          // -0.5 = เปลี่ยนข้อความกลางช่วง fade 1 วิ ไม่ใช่ตอนเริ่ม (ไม่งั้นข้อความนำภาพไปครึ่งวิ)
+          onTimeUpdate={(e) =>
+            setIndex(Math.min(slides.length - 1, Math.max(0, Math.floor((e.currentTarget.currentTime - 0.5) / SLIDE))))
+          }
+          playsInline
+          poster="/assets/hero-poster.jpg"
+          preload="auto"
+          ref={video}
+          src="/assets/hero.mp4"
+        />
         <div className="hero__shade" />
       </div>
 
@@ -140,7 +144,7 @@ export function HeroCarousel() {
                 aria-label={`${slide.category} — ${slide.product}`}
                 className={i === index ? 'is-active' : undefined}
                 key={slide.category}
-                onClick={() => setIndex(i)}
+                onClick={() => goTo(i)}
                 type="button"
               >
                 <span className="hero__pager-num">{String(i + 1).padStart(2, '0')}</span>

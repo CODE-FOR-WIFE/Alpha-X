@@ -115,9 +115,8 @@ p { font-size: 17px; line-height: 1.7; }
 .hero h1 em { color: var(--red); font-weight: 400; }
 .hero__lede { max-width: 575px; margin-bottom: 0; color: var(--muted-dark); font-size: clamp(17px, 1.35vw, 21px); }
 .hero__visual { position: absolute; z-index: -1; inset: 0; }
-/* สไลด์ทุกใบซ้อนกันแล้ว crossfade ด้วย opacity — ไม่ต้อง unmount รูปเลยไม่มีจังหวะกระพริบตอนโหลด */
-.hero__visual img { object-fit: cover; transform: scale(1.04); opacity: 0; transition: opacity .9s ease-in-out; }
-.hero__visual img.is-active { opacity: 1; }
+/* วิดีโอไฟล์เดียว crossfade อบมาในไฟล์แล้ว — CSS แค่ให้เต็มกรอบ */
+.hero__visual video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero__slide { animation: hero-slide-in .7s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes hero-slide-in { from { opacity: 0; transform: translateY(18px); } }
 /* pagination ใช้เลข 01/02/03 แบบเดียวกับ expertise cards / values list — เส้นเปล่า 3 เส้นไม่มี anchor
@@ -362,7 +361,7 @@ p { font-size: 17px; line-height: 1.7; }
   .hero { min-height: 820px; align-items: end; }
   .hero__copy { padding: 170px 0 126px; }
   .hero h1 { font-size: clamp(54px, 16vw, 84px); }
-  .hero__visual img { object-position: 64% center; }
+  .hero__visual video { object-position: 60% center; }
   .hero__shade { background: linear-gradient(0deg, rgb(5 5 7 / 96%) 4%, rgb(5 5 7 / 48%) 70%, rgb(5 5 7 / 45%)); }
   .hero__scroll { bottom: 24px; }
   .hero__cta-line { margin: 24px 0 12px; font-size: 11px; letter-spacing: .16em; }

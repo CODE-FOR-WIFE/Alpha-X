@@ -11,3 +11,6 @@ preview/
 .env
 .env.local
 deck-export/
+
+# ฟุตเทจดิบ 4K (~280MB) — เก็บในเครื่องเท่านั้น ตัวที่ใช้จริงคือ demo/public/assets/hero.mp4
+footage/
