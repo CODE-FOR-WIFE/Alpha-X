@@ -82,7 +82,7 @@ jobs:
           python3 -c "import json; d=json.load(open('/tmp/vercel-project.json')); print('Linked project:', d.get('name'), d.get('id'))"
 
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global vercel@63.1.2
 
       - name: Link project
         working-directory: demo
@@ -100,16 +100,26 @@ jobs:
           if [ "$IS_PRODUCTION" = "true" ]; then
             ARGS+=(--prod)
           fi
-          URL=$(vercel deploy "${ARGS[@]}")
+          URL=$(vercel deploy "${ARGS[@]}" | tail -n 1 | tr -d '[:space:]')
+          if [[ ! "$URL" =~ ^https://[A-Za-z0-9._~:/?#\[\]@!$\&\(\)*+,;=%-]+$ ]]; then
+            echo "::error::Deploy did not return a URL"
+            exit 1
+          fi
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "### Deployed to [$URL]($URL)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Comment preview URL on PR
         if: github.event_name == 'pull_request' && steps.deploy.outputs.url != ''
         uses: actions/github-script@v7
+        env:
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}
         with:
           script: |
-            const url = '${{ steps.deploy.outputs.url }}';
+            const url = process.env.DEPLOY_URL || '';
+            if (!/^https:\/\/\S+$/.test(url)) {
+              core.setFailed('Deploy URL missing');
+              return;
+            }
             const body = `**Vercel preview:** ${url}`;
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
