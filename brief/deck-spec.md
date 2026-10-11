@@ -58,7 +58,7 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 | 02 | Who We Are | CFW-Intelligent message — belief lead, the two-question pull quote, philosophy card, three capability cards, company identity block |
 
 > **Alpha X is CFW's first client.** The deck therefore never claims past work — no client logos, no case studies, no "trusted by". The proof it offers instead is the working demo (S08, S12): *you don't have to take our word for it, open it yourself.* Keep it that way if the deck is extended.
-| 03 | Why Revamp | Today vs Vision columns · why-now bar (THB 20bn, IPO 4–5 yrs, new asset classes) |
+| 03 | Why Revamp | Today vs Vision columns · why-now bar (3 → 7 asset classes, Wealth with Passion, IPO-ready) |
 | 04 | Audience | Three personas, each mapped to what the new site gives them |
 | 05 | Brand Persona | "Calm. Intelligent. Trusted. *Never trying too hard.*" · 3 moods · 4 values |
 | 06 | Design System | Swatches, type specimen, spacing bars, buttons — "change one token, the whole site follows" |
@@ -66,7 +66,7 @@ Two vector legs, the site's own signature: a red leg at 31.3° crossed near its 
 | 08 | Key Screens | Two demo screenshot slots |
 | 09 | Content Strategy | Cadence + SEO cards · Collector / Explorer / Connoisseur pillars |
 | 10 | Tech & Security | Next.js → Payload → PostgreSQL → Azure · two checklists · closing hook |
-| 11 | Timeline & Investment | 5 phases with gates · THB 470,000 / 30,000 per month / 1 month warranty |
+| 11 | Timeline & Investment | 5 phases with gates · THB 502,900.00 / 30,000 per month / 1 month warranty |
 | 12 | Live Demo | Centred close, QR slot, X motif · **copy states only what the demo actually does** — video lightbox has no file yet, so “every interaction is live” was removed |
 
 ## Still awaiting

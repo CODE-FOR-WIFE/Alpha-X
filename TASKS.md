@@ -30,6 +30,18 @@
   **ต้องกด `syncDeck()` ก่อนส่งลิงก์ให้ลูกค้าทุกครั้ง**
 
 ## 📋 Queue
+
+### RFP bidding 14–15 ต.ค. 2026 — ปรับเดคให้ติ๊ก Fully Complied ได้ทุกข้อ Part 1–2
+ไล่ทีละข้อใน tracker: https://claude.ai/artifact/XkY9fL4vxnt1ybVfaGUKZH (ติ๊กปิดข้อในนั้นได้เลย) · ต้นฉบับ `~/Downloads/RFP_Revised.xlsx` · Part 3–7 แทนตามกับหมิงไชน่าเอง
+- [ ] สไลด์ใหม่ RFP Compliance Map (ข้อ RFP → เลขสไลด์) ท้ายเล่ม
+- [ ] S07 ใส่ chips ข้อย่อย 2.1.1–2.5.3 ตามคำ RFP
+- [ ] สไลด์ใหม่ Cinematic Hero & Media (7 asset classes · poster · mobile fallback · CDN)
+- [ ] สไลด์ใหม่ Path to Inquiry (Hero → Discover more → Trifold → Product → Form)
+- [ ] S08 เพิ่มภาพมือถือ + mockup About / Products / Contact
+- [ ] S06 เติม component states + breakpoint 393 / 768 / 1440
+- [ ] S09 บรรทัด "Content supplied by Alpha X team"
+- [ ] S11 กล่อง Scope & assumptions (image proposal · media cost ลูกค้าจ่าย · content migration)
+- [ ] Demo: hero Watch + Art · ลิงก์ Alpha X Plus · เปลี่ยนชื่อ "Alpha X Partnership & Events" · tagline ใน hero
 - [ ] S06 ช่อง component states (เติมตอน build จริง)
 
 ### ส่งมอบ
