@@ -1,18 +1,14 @@
 'use client'
 
-import { ArrowDown, Phone } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { ArrowDown, Pause, Phone, Play } from 'lucide-react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 
-/**
- * ponytail: วิดีโอ (hero.mp4 desktop / hero-mobile.mp4 แนวตั้ง — render ด้วย scripts/build-hero-video.sh) ต่อ 5 ช็อตเรียงตาม slides ช็อตละ SLIDE วินาที
- * crossfade อบในไฟล์แล้ว — ข้อความอ่าน index จาก currentTime ไม่มี timer แยก เลยไม่มีทางหลุดจังหวะกับภาพ
- * ความมืดฝั่งซ้ายมาจาก .hero__shade ทับอยู่ ไม่ได้อบลงวิดีโอ — ปรับใน CSS ได้โดยไม่ต้อง render ใหม่
- * ฟุตเทจ: Car/Aircraft/Property จาก Magnific Stock, Yacht/Gold จาก Mixkit (free license) — ไฟล์ดิบอยู่ footage/raw (gitignored)
- */
-// 5 สินเชื่อตาม sitemap หน้า 02 Our Products — Car / Yacht-River Boat / Aircraft / Property / Gold
-// (Big Bike ที่เคยอยู่ตรงนี้ไม่มีใน sitemap ของลูกค้า เอาออกแล้ว)
+// Each story owns a moving video, portrait version, and matching first-frame poster.
+// Build media with scripts/build-hero-clips.sh. Advance only when playback ends.
+// Six lifestyle stories: car, yacht, aircraft, property, watch and art.
 const slides = [
   {
+    media: 'automotive',
     category: 'Vehicle Financing',
     product: 'Luxury Car',
     lede: 'Beyond wealth lies what moves you. We shape financial possibilities around the life, objects and experiences that matter most.',
@@ -26,6 +22,7 @@ const slides = [
   },
   {
     category: 'Marine Financing',
+    media: 'marine',
     product: 'Yacht / River Boat',
     lede: 'Specialist structures for yachts and riverboats, arranged with the discretion a vessel of this order deserves.',
     title: (
@@ -38,6 +35,7 @@ const slides = [
   },
   {
     category: 'Aviation Financing',
+    media: 'aircraft',
     product: 'Aircraft',
     lede: 'Private aviation financed for owners who measure distance in hours saved rather than miles travelled.',
     title: (
@@ -50,6 +48,7 @@ const slides = [
   },
   {
     category: 'Property Financing',
+    media: 'property',
     product: 'Luxury Property',
     lede: 'Residences and landmark addresses held as part of a wider portfolio, structured without disturbing the rest of it.',
     title: (
@@ -61,61 +60,122 @@ const slides = [
     ),
   },
   {
-    category: 'Gold-backed Finance',
-    product: 'Gold-backed Finance',
-    lede: 'Liquidity released against gold you already hold—without giving up the position you took it for.',
+    category: 'Watch Collection',
+    media: 'watch',
+    product: 'Luxury Watch',
+    lede: 'For those who recognise the extraordinary in every detail. Exceptional timepieces, chosen with passion and held across generations.',
     title: (
       <>
-        Liquidity,
+        Precision,
         <br />
-        <em>Unbroken</em>
+        <em>Preserved</em>
+      </>
+    ),
+  },
+  {
+    category: 'Art Collection',
+    media: 'art',
+    product: 'Art',
+    lede: 'An eye for the exceptional. A connection that deepens with every work. Art collected with conviction, and a legacy shaped by you.',
+    title: (
+      <>
+        A life
+        <br />
+        <em>Curated</em>
       </>
     ),
   },
 ]
 
-// ต้องตรงกับ offset ของ xfade ตอน render hero.mp4 (ช็อตละ 6.5 วิ, fade 1 วิ)
-const SLIDE = 6.5
-const INTERVAL = SLIDE * 1000
+function subscribeMotion(callback: () => void) {
+  const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+  query.addEventListener('change', callback)
+  return () => query.removeEventListener('change', callback)
+}
+
+function subscribeViewport(callback: () => void) {
+  const query = window.matchMedia('(max-width: 767px)')
+  query.addEventListener('change', callback)
+  return () => query.removeEventListener('change', callback)
+}
 
 export function HeroCarousel() {
   const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [explicitPlay, setExplicitPlay] = useState(false)
+  const [blocked, setBlocked] = useState(false)
+  const [revision, setRevision] = useState(0)
   const video = useRef<HTMLVideoElement>(null)
+  const reducedMotion = useSyncExternalStore(subscribeMotion,
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches, () => true)
+  const mobile = useSyncExternalStore(subscribeViewport,
+    () => window.matchMedia('(max-width: 767px)').matches, () => false)
+  const shouldPause = paused || (reducedMotion && !explicitPlay)
+  const playbackWanted = useRef(false)
+
+  const startPlayback = (element: HTMLVideoElement) => {
+    // Safari needs the DOM properties set as well as the muted attribute.
+    element.muted = true
+    element.defaultMuted = true
+    element.play().catch((error: DOMException) => {
+      // A source switch or pause normally aborts the previous play promise.
+      // It must never pause the next story or poison its autoplay state.
+      if (error.name === 'AbortError' || video.current !== element || !playbackWanted.current) return
+      setBlocked(true)
+    })
+  }
 
   useEffect(() => {
-    // เคารพ prefers-reduced-motion — ไม่เล่นเอง ค้างที่ poster ให้ผู้ใช้กดเลขเลือกช็อตแทน
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    video.current?.play().catch(() => {})
-  }, [])
+    const element = video.current
+    if (!element) return
+    playbackWanted.current = !shouldPause
+    if (shouldPause) element.pause()
+    else startPlayback(element)
+    return () => { playbackWanted.current = false }
+  }, [index, shouldPause, revision, mobile])
 
   const active = slides[index]
+  const mediaVersion = active.media === 'art' ? '20261011-art-renaissance' : '20261011-luxury'
 
-  const goTo = (i: number) => {
-    // +1 ข้ามช่วง crossfade ไปลงภาพเต็มของช็อตนั้นเลย
-    if (video.current) video.current.currentTime = i * SLIDE + 1
+  const goTo = (i: number, selected = false) => {
+    // Selecting a story is an explicit request to play, even after a pause/error.
+    if (selected) { setExplicitPlay(true); setPaused(false) }
+    setProgress(0)
+    setFailed(false)
+    setBlocked(false)
     setIndex(i)
+    setRevision((value) => value + 1)
   }
 
   return (
-    <section aria-label="Featured" aria-roledescription="carousel" className="hero section-dark">
+    <section aria-label="Featured" aria-roledescription="carousel" className={`hero section-dark${active.media === 'art' ? ' hero--art' : ''}`}>
       <div className="hero__visual" aria-hidden="true">
         <video
-          loop
+          key={`${active.media}-${revision}-${mobile}`}
+          src={`/assets/hero-${active.media}${mobile ? '-mobile' : ''}.mp4?v=${mediaVersion}`}
+          autoPlay={!shouldPause}
           muted
-          // -0.5 = เปลี่ยนข้อความกลางช่วง fade 1 วิ ไม่ใช่ตอนเริ่ม (ไม่งั้นข้อความนำภาพไปครึ่งวิ)
-          onTimeUpdate={(e) =>
-            setIndex(Math.min(slides.length - 1, Math.max(0, Math.floor((e.currentTarget.currentTime - 0.5) / SLIDE))))
-          }
+          onCanPlay={(e) => {
+            if (!shouldPause) startPlayback(e.currentTarget)
+          }}
+          onPlaying={() => setBlocked(false)}
+          onEnded={() => { if (!shouldPause) goTo((index + 1) % slides.length) }}
+          onTimeUpdate={(e) => {
+            const { currentTime, duration } = e.currentTarget
+            setProgress(duration > 0 ? currentTime / duration : 0)
+          }}
+          onError={(e) => {
+            if (e.currentTarget !== video.current || !e.currentTarget.error) return
+            setFailed(true)
+            setPaused(true)
+          }}
           playsInline
-          poster="/assets/hero-poster.jpg"
+          poster={`/assets/hero-${active.media}-poster.jpg?v=${mediaVersion}`}
           preload="auto"
           ref={video}
-        >
-          {/* มือถือได้ไฟล์ตัดแนวตั้งแยก (~6MB) — คมกว่าให้ CSS crop จากไฟล์ 16:9 และเบากว่าครึ่งหนึ่ง
-              เบราว์เซอร์เลือก source ตอนโหลดครั้งเดียว หมุน/ย่อจอทีหลังไม่สลับไฟล์ ซึ่งไม่เป็นไรเพราะ cover ทั้งคู่ */}
-          <source media="(max-width: 767px)" src="/assets/hero-mobile.mp4" type="video/mp4" />
-          <source src="/assets/hero.mp4" type="video/mp4" />
-        </video>
+        />
         <div className="hero__shade" />
       </div>
 
@@ -148,17 +208,34 @@ export function HeroCarousel() {
                 aria-label={`${slide.category} — ${slide.product}`}
                 className={i === index ? 'is-active' : undefined}
                 key={slide.category}
-                onClick={() => goTo(i)}
+                onClick={() => goTo(i, true)}
                 type="button"
               >
                 <span className="hero__pager-num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="hero__pager-track">
-                  {/* animationDuration ผูกกับ INTERVAL ตัวเดียวกับ setInterval — แถบวิ่งเต็มพอดีตอนสไลด์เปลี่ยน */}
-                  <span style={{ animationDuration: `${INTERVAL}ms` }} />
+                  <span style={{ width: `${i === index ? progress * 100 : 0}%` }} />
                 </span>
               </button>
             ))}
+            <button
+              className="hero__playback"
+              aria-label={shouldPause || blocked ? 'Play featured video' : 'Pause featured video'}
+              onClick={() => {
+                const resume = shouldPause || blocked
+                setExplicitPlay(true)
+                setBlocked(false)
+                if (failed) { video.current?.load(); setFailed(false) }
+                setPaused(!resume)
+                playbackWanted.current = resume
+                if (resume && video.current) startPlayback(video.current)
+                else video.current?.pause()
+              }}
+              type="button"
+            >
+              {shouldPause || blocked ? <Play size={16} /> : <Pause size={16} />}
+            </button>
           </div>
+          {failed && <p role="status">Video unavailable. Choose another story or press play to retry.</p>}
         </div>
       </div>
 

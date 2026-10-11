@@ -115,7 +115,7 @@ p { font-size: 17px; line-height: 1.7; }
 .hero h1 em { color: var(--red); font-weight: 400; }
 .hero__lede { max-width: 575px; margin-bottom: 0; color: var(--muted-dark); font-size: clamp(17px, 1.35vw, 21px); }
 .hero__visual { position: absolute; z-index: -1; inset: 0; }
-/* วิดีโอไฟล์เดียว crossfade อบมาในไฟล์แล้ว — CSS แค่ให้เต็มกรอบ */
+/* Independent film for each story, with a matching poster during loading. */
 .hero__visual video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero__slide { animation: hero-slide-in .7s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes hero-slide-in { from { opacity: 0; transform: translateY(18px); } }
@@ -135,9 +135,12 @@ p { font-size: 17px; line-height: 1.7; }
 .hero__pager button:hover .hero__pager-num { color: rgb(255 255 255 / 80%); }
 .hero__pager button:hover .hero__pager-track { background: rgb(255 255 255 / 45%); }
 .hero__pager button.is-active .hero__pager-num { color: var(--cream); }
-.hero__pager button.is-active .hero__pager-track span { animation-name: hero-progress; animation-timing-function: linear; animation-fill-mode: forwards; }
-@keyframes hero-progress { to { width: 100%; } }
+.hero__pager-track span { transition: width .2s linear; }
+.hero__pager button.hero__playback { width: 44px; min-height: 44px; align-items: center; justify-content: center; color: var(--cream); }
 .hero__shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(5 5 7 / 98%) 0%, rgb(5 5 7 / 78%) 40%, rgb(5 5 7 / 12%) 78%), linear-gradient(0deg, rgb(5 5 7 / 80%) 0%, transparent 38%); }
+@media (min-width: 768px) {
+  .hero--art .hero__shade { background: linear-gradient(90deg, #050507 0%, #050507 44%, rgb(5 5 7 / 12%) 65%), linear-gradient(0deg, rgb(5 5 7 / 80%), transparent 38%); }
+}
 .hero__scroll { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: 34px; display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
 .hero__scroll svg { width: 16px; }
 .split-heading { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .55fr); gap: clamp(42px, 9vw, 132px); align-items: end; padding: clamp(42px, 6vw, 74px) 0 clamp(60px, 8vw, 104px); }
@@ -367,8 +370,8 @@ p { font-size: 17px; line-height: 1.7; }
   .hero__cta-line { margin: 24px 0 12px; font-size: 11px; letter-spacing: .16em; }
   .hero__cta .button { flex: 1 1 100%; }
   .hero__pager { margin-top: 32px; }
-  .hero__pager-row { gap: 22px; }
-  .hero__pager-track { width: 44px; }
+  .hero__pager-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)) 44px; gap: 8px; margin-left: 0; }
+  .hero__pager-track { width: 100%; }
   .split-heading { grid-template-columns: 1fr; gap: 30px; align-items: start; }
   .expertise-card { display: block; }
   .expertise-card__content > p:not(.eyebrow) { min-height: 0; }
